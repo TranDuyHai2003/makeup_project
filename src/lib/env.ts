@@ -14,8 +14,4 @@ export function isCloudinaryConfigured(): boolean {
   );
 }
 
-export function isResendConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL);
-}
-
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");

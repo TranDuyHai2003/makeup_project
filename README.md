@@ -8,7 +8,7 @@ Website portfolio tông tối, điểm nhấn gold, kèm trang admin để chủ
 | Giao diện | Tailwind CSS v4, Framer Motion, yet-another-react-lightbox, dnd-kit |
 | Database + đăng nhập admin | Supabase (Postgres + Auth, RLS) |
 | Ảnh | Cloudinary (upload thẳng từ trình duyệt, tối ưu `f_auto,q_auto,w_xxx`) |
-| Email form liên hệ | Resend |
+| Liên hệ | Nút Messenger / Zalo / Instagram / gọi điện (không cần email server) |
 | Hosting | Vercel |
 
 ## Chạy thử ngay (chưa cần tài khoản gì)
@@ -42,21 +42,13 @@ Bạn tự tạo các tài khoản dưới đây bằng email của mình, sau �
    - `API Key` → `CLOUDINARY_API_KEY`
    - `API Secret` → `CLOUDINARY_API_SECRET`
 
-### 3. Resend (tuỳ chọn, để nhận email khi khách gửi form)
-
-1. Vào https://resend.com → đăng ký → **API Keys → Create** → copy vào `RESEND_API_KEY`.
-2. `CONTACT_TO_EMAIL`: email của bạn để nhận thông báo đặt lịch.
-3. Chưa xác minh domain thì giữ `CONTACT_FROM_EMAIL=Portfolio <onboarding@resend.dev>` (Resend chỉ cho gửi tới đúng email đã đăng ký tài khoản). Khi có tên miền riêng, thêm domain trong Resend rồi đổi `from` sang email thuộc domain đó.
-
-Nếu bỏ qua Resend, form vẫn hoạt động ở chế độ demo (ghi log trên server), khách vẫn có nút Zalo / gọi điện.
-
-### 4. GitHub + Vercel (để đưa trang lên mạng)
+### 3. GitHub + Vercel (để đưa trang lên mạng)
 
 1. Tạo repo trên https://github.com và push code lên.
 2. Vào https://vercel.com → **Add New → Project** → chọn repo → ở bước **Environment Variables** dán toàn bộ biến trong `.env.local` (đổi `NEXT_PUBLIC_SITE_URL` thành `https://tenban.vercel.app`) → Deploy.
 3. Từ đó mỗi lần push code, Vercel tự deploy lại.
 
-### 5. Giữ Supabase không bị tạm dừng
+### 4. Giữ Supabase không bị tạm dừng
 
 Supabase free tạm dừng project sau 7 ngày không hoạt động. Workflow `.github/workflows/keep-alive.yml` gọi `/api/keep-alive` 3 ngày một lần. Trong GitHub repo → **Settings → Secrets and variables → Actions**, thêm:
 
@@ -75,7 +67,6 @@ src/
 │  │  └─ actions.ts             # Server actions: kiểm tra user + ghi DB + updateTag('site')
 │  ├─ api/
 │  │  ├─ cloudinary-sign/       # Ký upload (chỉ admin đã đăng nhập)
-│  │  ├─ contact/               # Nhận form, gửi email qua Resend
 │  │  └─ keep-alive/            # Giữ Supabase thức
 │  ├─ sitemap.ts, robots.ts
 ├─ components/  (ui/, sections/, admin/)

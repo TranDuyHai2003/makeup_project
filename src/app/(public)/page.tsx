@@ -32,7 +32,7 @@ export default async function HomePage() {
       <Portfolio photos={data.photos} categories={data.categories} />
       <BeforeAfter photos={data.photos} />
       <Testimonials testimonials={data.testimonials} />
-      <Contact settings={data.settings} services={data.services} />
+      <Contact settings={data.settings} />
     </>
   );
 }
