@@ -63,8 +63,9 @@ export function SmartImage({ src, alt, width, height, sizes = "100vw", maxWidth 
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
           className={cn(
-            "h-full w-full object-cover transition-all duration-700",
-            loaded ? "opacity-100 blur-0" : "opacity-0 blur-sm",
+            "h-full w-full object-cover transition-[opacity,filter,transform] duration-700 ease-out",
+            // Ảnh ưu tiên (hero) hiện ngay để không làm chậm LCP; ảnh còn lại mờ dần khi tải xong.
+            priority || loaded ? "opacity-100 blur-0" : "opacity-0 blur-sm",
             imgClassName,
           )}
         />

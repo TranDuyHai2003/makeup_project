@@ -18,15 +18,19 @@ export function Contact({ settings }: { settings: Settings }) {
   if (settings.instagram) channels.push({ href: settings.instagram, label: "Instagram", hint: "Nhắn tin qua Instagram", icon: <Camera size={20} />, accent: "#e1306c" });
   if (settings.tiktok) channels.push({ href: settings.tiktok, label: "TikTok", hint: "Xem thêm video", icon: <span className="text-xs font-bold">TT</span>, accent: "#ffffff" });
 
+  const names = channels.filter((c) => c.label !== "TikTok").map((c) => c.label);
+  const via = names.length > 1 ? `${names.slice(0, -1).join(", ")} hoặc ${names[names.length - 1]}` : names[0];
+  const intro = `${via ? `Nhắn cho mình qua ${via}` : "Gọi cho mình"} kèm ngày, địa điểm và phong cách bạn muốn. Mình thường phản hồi trong vòng vài giờ.`;
+
   return (
-    <section id="contact" className="bg-bg-2 py-24 md:py-32">
+    <section id="contact" className="bg-bg-2 py-24 md:py-36">
       <div className="mx-auto grid max-w-6xl gap-16 px-5 md:grid-cols-2 md:px-8">
         <Reveal>
           <SectionHeading
             align="left"
             eyebrow="Liên hệ"
             title="Đặt lịch cho ngày đặc biệt của bạn"
-            description="Nhắn cho mình qua Messenger, Zalo hoặc Instagram kèm ngày, địa điểm và phong cách bạn muốn. Mình thường phản hồi trong vòng vài giờ."
+            description={intro}
           />
           <ul className="mt-10 space-y-4 text-sm text-muted">
             {settings.phone && (
@@ -59,7 +63,7 @@ function ChannelCard({ href, label, hint, icon, accent, external = true }: Chann
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className="group flex items-center gap-5 rounded-2xl border border-line px-5 py-4 transition-colors hover:border-gold"
+      className="group flex items-center gap-4 rounded-2xl border border-line bg-bg/40 px-4 py-4 transition-[border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-gold active:scale-[0.99] md:gap-5 md:px-5"
     >
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: accent, color: accent === "#ffffff" ? "#000" : "#fff" }}>
         {icon}

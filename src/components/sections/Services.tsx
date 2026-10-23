@@ -1,3 +1,5 @@
+import { ArrowUpRight } from "lucide-react";
+import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { Service } from "@/lib/types";
@@ -6,23 +8,31 @@ import { formatPrice } from "@/lib/utils";
 export function Services({ services }: { services: Service[] }) {
   if (services.length === 0) return null;
   return (
-    <section id="services" className="bg-bg-2 py-24 md:py-32">
+    <section id="services" className="bg-bg-2 py-24 md:py-36">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeading eyebrow="Dịch vụ & bảng giá" title="Mỗi dịp một phong cách" description="Giá tham khảo, có thể thay đổi theo yêu cầu và địa điểm. Liên hệ để được tư vấn gói phù hợp." />
-        <div className="mt-16 divide-y divide-line border-y border-line">
+        <SectionHeading eyebrow="Dịch vụ & bảng giá" title="Mỗi dịp một phong cách" description="Giá tham khảo, có thể thay đổi theo yêu cầu và địa điểm. Nhắn mình để được tư vấn gói phù hợp." />
+        <div className="mt-14 border-t border-line md:mt-20">
           {services.map((s, i) => (
-            <Reveal key={s.id} delay={i * 0.05}>
-              <div className="group grid gap-3 py-7 md:grid-cols-[1fr_2fr_auto] md:items-baseline md:gap-10">
-                <h3 className="font-display text-2xl font-light transition-colors group-hover:text-gold">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{s.description}</p>
-                <div className="text-right text-sm tracking-wide text-gold md:min-w-32">
-                  <span className="text-xs text-muted">từ </span>
-                  {formatPrice(s.price_from)}
+            <Reveal key={s.id} delay={Math.min(i, 4) * 0.05}>
+              <div className="group relative grid grid-cols-[auto_1fr_auto] gap-x-4 gap-y-2 border-b border-line py-6 md:grid-cols-[3rem_1fr_1.6fr_8.5rem] md:items-baseline md:gap-x-10 md:py-8">
+                <span className="font-display pt-1 text-sm text-gold/70 md:pt-0">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="font-display text-[1.45rem] font-light leading-snug transition-colors duration-300 group-hover:text-gold md:text-[1.75rem]">{s.title}</h3>
+                <div className="row-start-1 col-start-3 whitespace-nowrap pt-1.5 text-right md:col-start-4 md:pt-0">
+                  {s.price_from != null && <span className="mr-1 text-[0.65rem] uppercase tracking-[0.15em] text-muted">từ</span>}
+                  <span className="text-sm tracking-wide text-gold md:text-base">{formatPrice(s.price_from)}</span>
                 </div>
+                {s.description && (
+                  <p className="col-span-2 col-start-2 text-sm leading-relaxed text-muted md:col-span-1 md:col-start-3 md:row-start-1">{s.description}</p>
+                )}
               </div>
             </Reveal>
           ))}
         </div>
+        <Reveal className="mt-12 flex justify-center">
+          <ButtonLink href="/#contact" variant="outline">
+            Nhận tư vấn & báo giá <ArrowUpRight size={14} />
+          </ButtonLink>
+        </Reveal>
       </div>
     </section>
   );

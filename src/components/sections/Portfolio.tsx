@@ -1,86 +1,159 @@
 "use client";
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Expand } from "lucide-react";
+import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SmartImage } from "@/components/ui/SmartImage";
-import { cldUrl } from "@/lib/cloudinary";
 import type { Category, Photo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type Props = { photos: Photo[]; categories: Category[]; showHeading?: boolean; showFilter?: boolean; title?: string; eyebrow?: string };
+const PortfolioLightbox = dynamic(() => import("./PortfolioLightbox"), { ssr: false });
 
-export function Portfolio({ photos, categories, showHeading = true, showFilter = true, title = "Những khoảnh khắc đã qua tay mình", eyebrow = "Portfolio" }: Props) {
+const PAGE = 12;
+
+type Props = { photos: Photo[]; categories: Category[]; showHeading?: boolean; showFilter?: boolean; title?: string; eyebrow?: string; description?: string };
+
+export function Portfolio({ photos, categories, showHeading = true, showFilter = true, title = "Những khoảnh khắc đã qua tay mình", eyebrow = "Portfolio", description }: Props) {
   const [active, setActive] = useState<string | "all">("all");
   const [index, setIndex] = useState(-1);
+  const [opened, setOpened] = useState(false); // chỉ tải lightbox sau lần bấm đầu tiên
+  const [limit, setLimit] = useState(PAGE);
 
-  const visible = useMemo(() => (active === "all" ? photos : photos.filter((p) => p.category_id === active)), [photos, active]);
+  const filtered = useMemo(() => (active === "all" ? photos : photos.filter((p) => p.category_id === active)), [photos, active]);
+  const visible = filtered.slice(0, limit);
   const usedCategories = categories.filter((c) => photos.some((p) => p.category_id === c.id));
+  const catName = (id: string | null) => categories.find((c) => c.id === id)?.name;
 
   if (photos.length === 0) return null;
 
-  return (
-    <section id="portfolio" className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
-      {showHeading && <SectionHeading eyebrow={eyebrow} title={title} />}
+  const open = (i: number) => {
+    setOpened(true);
+    setIndex(i);
+  };
+  const choose = (id: string | "all") => {
+    setActive(id);
+    setLimit(PAGE);
+  };
 
-      {showFilter && usedCategories.length > 1 && (
-        <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3">
-          <FilterButton active={active === "all"} onClick={() => setActive("all")}>Tất cả</FilterButton>
-          {usedCategories.map((c) => (
-            <FilterButton key={c.id} active={active === c.id} onClick={() => setActive(c.id)}>{c.name}</FilterButton>
-          ))}
+  return (
+    <section id="portfolio" className="mx-auto max-w-6xl py-24 md:px-8 md:py-36">
+      {showHeading && (
+        <div className="px-5 md:px-0">
+          <SectionHeading eyebrow={eyebrow} title={title} description={description} />
         </div>
       )}
 
-      <motion.div layout className="masonry mt-12">
-        <AnimatePresence mode="popLayout">
+      {showFilter && usedCategories.length > 1 && (
+        <div className="no-scrollbar mt-10 overflow-x-auto md:mt-14">
+          <div className="mx-auto flex w-max gap-2 px-5 md:px-0">
+            <FilterChip active={active === "all"} onClick={() => choose("all")}>Tất cả</FilterChip>
+            {usedCategories.map((c) => (
+              <FilterChip key={c.id} active={active === c.id} onClick={() => choose(c.id)}>{c.name}</FilterChip>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <motion.div layout className="masonry mt-8 px-2.5 md:mt-12 md:px-0">
+        <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((p, i) => (
             <motion.button
               layout
               key={p.id}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.4 }}
-              onClick={() => setIndex(i)}
-              className="group block w-full cursor-zoom-in text-left"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => open(i)}
+              aria-label={`Xem ảnh ${p.caption ?? i + 1}`}
+              className="group relative block w-full cursor-zoom-in overflow-hidden text-left"
             >
-              <SmartImage src={p.url} alt={p.caption ?? "Makeup"} width={p.width} height={p.height} sizes="(min-width: 768px) 33vw, 50vw" maxWidth={1024} imgClassName="group-hover:scale-105" />
-              {p.caption && <p className="mt-2 text-xs tracking-wide text-muted">{p.caption}</p>}
+              <SmartImage
+                src={p.url}
+                alt={p.caption ?? "Makeup"}
+                width={p.width}
+                height={p.height}
+                sizes="(min-width: 1152px) 370px, (min-width: 768px) 31vw, 48vw"
+                maxWidth={1024}
+                imgClassName="duration-[1.2s] group-hover:scale-[1.04]"
+              />
+              {/* Chú thích: luôn hiện nhẹ trên mobile, hiện khi rê chuột trên PC */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/75 via-black/25 to-transparent p-3 pt-10 transition-opacity duration-500 md:p-5 md:pt-16 md:opacity-0 md:group-hover:opacity-100">
+                <div className="min-w-0">
+                  {active === "all" && catName(p.category_id) && (
+                    <p className="hidden text-[0.6rem] uppercase tracking-[0.25em] text-gold md:block">{catName(p.category_id)}</p>
+                  )}
+                  {p.caption && <p className="font-display truncate text-[0.95rem] leading-tight text-ink md:mt-1 md:text-xl">{p.caption}</p>}
+                </div>
+                <Expand size={16} className="hidden shrink-0 text-ink/80 md:block" />
+              </div>
             </motion.button>
           ))}
         </AnimatePresence>
       </motion.div>
 
-      {showFilter && usedCategories.length > 0 && (
-        <div className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[0.7rem] uppercase tracking-[0.25em] text-muted">
-          {usedCategories.map((c) => (
-            <Link key={c.id} href={`/portfolio/${c.slug}`} className="hover:text-gold">Album {c.name} →</Link>
-          ))}
+      {filtered.length > limit && (
+        <div className="mt-10 flex justify-center px-5">
+          <button
+            onClick={() => setLimit((l) => l + PAGE)}
+            className="rounded-full border border-line px-7 py-3 text-[0.68rem] uppercase tracking-[0.25em] text-muted transition-colors hover:border-gold hover:text-gold"
+          >
+            Xem thêm {Math.min(PAGE, filtered.length - limit)} ảnh
+          </button>
         </div>
       )}
 
-      <Lightbox
-        open={index >= 0}
-        index={index}
-        close={() => setIndex(-1)}
-        slides={visible.map((p) => ({ src: cldUrl(p.url, 1920), alt: p.caption ?? "", width: p.width ?? undefined, height: p.height ?? undefined }))}
-        styles={{ container: { backgroundColor: "rgba(11,11,12,0.96)" } }}
-      />
+      {showFilter && usedCategories.length > 0 && (
+        <div className="mt-20 px-5 md:mt-28 md:px-0">
+          <Reveal className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Album</p>
+              <h3 className="font-display mt-3 text-3xl font-light md:text-4xl">Xem theo chủ đề</h3>
+            </div>
+          </Reveal>
+          <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-5">
+            {usedCategories.map((c, i) => {
+              const inCat = photos.filter((p) => p.category_id === c.id);
+              const cover = inCat.find((p) => p.is_featured) ?? inCat[0];
+              return (
+                <Reveal key={c.id} delay={i * 0.06}>
+                  <Link href={`/portfolio/${c.slug}`} className="group relative block aspect-[3/4] overflow-hidden">
+                    <SmartImage src={cover.url} alt={c.name} fill sizes="(min-width: 768px) 25vw, 50vw" maxWidth={640} imgClassName="duration-[1.2s] group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent transition-colors duration-500 group-hover:from-black/60" />
+                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 md:p-5">
+                      <div>
+                        <p className="font-display text-xl font-light leading-tight md:text-2xl">{c.name}</p>
+                        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink/70">{inCat.length} ảnh</p>
+                      </div>
+                      <ArrowUpRight size={18} className="text-gold transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {opened && <PortfolioLightbox photos={visible} index={index} onClose={() => setIndex(-1)} />}
     </section>
   );
 }
 
-function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}
-      className={cn("relative pb-1 text-[0.7rem] uppercase tracking-[0.3em] transition-colors", active ? "text-gold" : "text-muted hover:text-ink")}
+      aria-pressed={active}
+      className={cn(
+        "whitespace-nowrap rounded-full border px-5 py-2.5 text-[0.65rem] uppercase tracking-[0.22em] transition-colors duration-300",
+        active ? "border-gold bg-gold text-bg" : "border-line text-muted hover:border-gold/60 hover:text-ink",
+      )}
     >
       {children}
-      {active && <motion.span layoutId="filter-underline" className="absolute inset-x-0 -bottom-0.5 h-px bg-gold" />}
     </button>
   );
 }

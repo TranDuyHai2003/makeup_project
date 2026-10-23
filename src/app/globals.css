@@ -24,7 +24,9 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem; /* chừa chỗ cho header cố định khi nhảy tới #section */
   color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -32,6 +34,47 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Lớp nhiễu hạt rất nhẹ cho cảm giác ảnh film / sang trọng */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Ẩn thanh cuộn ngang (bộ lọc, carousel) nhưng vẫn vuốt được */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Chừa vùng an toàn trên iPhone có tai thỏ / thanh home */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.text-balance {
+  text-wrap: balance;
 }
 
 ::selection {
@@ -53,17 +96,23 @@ body {
 }
 
 .masonry {
-  column-gap: 1rem;
+  column-gap: 0.625rem;
   columns: 2;
 }
 @media (min-width: 768px) {
   .masonry {
+    column-gap: 1.25rem;
     columns: 3;
   }
 }
 .masonry > * {
   break-inside: avoid;
-  margin-bottom: 1rem;
+  margin-bottom: 0.625rem;
+}
+@media (min-width: 768px) {
+  .masonry > * {
+    margin-bottom: 1.25rem;
+  }
 }
 
 /* Thanh trượt Before/After */

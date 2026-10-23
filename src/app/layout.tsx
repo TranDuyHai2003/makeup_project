@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Cormorant_Garamond } from "next/font/google";
 import { SITE_URL } from "@/lib/env";
 import "./globals.css";
@@ -6,7 +6,7 @@ import "./globals.css";
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Makeup Artist Portfolio", template: "%s" },
   description: "Portfolio makeup artist chuyên nghiệp: cô dâu, sự kiện, editorial, kỷ yếu.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0b0c",
+  colorScheme: "dark",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
