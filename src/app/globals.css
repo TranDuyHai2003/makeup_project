@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b0b0c;
+  --bg-2: #151517;
+  --line: #2a2a2d;
+  --text: #f5f1ea;
+  --muted: #9a958c;
+  --gold: #c9a96e;
+  --gold-hover: #e0c48f;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-line: var(--line);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-be-vietnam), "Be Vietnam Pro", system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* Đường kẻ gold mảnh làm điểm nhấn */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.masonry {
+  column-gap: 1rem;
+  columns: 2;
+}
+@media (min-width: 768px) {
+  .masonry {
+    columns: 3;
+  }
+}
+.masonry > * {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+/* Thanh trượt Before/After */
+.ba-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  cursor: ew-resize;
+}
+.ba-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  cursor: ew-resize;
+}
+.ba-range::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: ew-resize;
+}
+
+/* Admin inputs */
+.input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+}
+.input:focus {
+  border-color: var(--gold);
+}
+.input::placeholder {
+  color: #6b675f;
 }

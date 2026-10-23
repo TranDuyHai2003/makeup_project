@@ -5,9 +5,14 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+  {
+    rules: {
+      // Ảnh lấy từ Cloudinary đã được tối ưu qua URL (f_auto,q_auto,w_xxx),
+      // nên dùng <img srcSet> trực tiếp thay vì next/image để không tốn quota tối ưu ảnh của Vercel.
+      "@next/next/no-img-element": "off",
+    },
+  },
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",

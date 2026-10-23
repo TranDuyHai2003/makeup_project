@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Makeup Artist Portfolio
 
-## Getting Started
+Website portfolio tông tối, điểm nhấn gold, kèm trang admin để chủ sở hữu tự cập nhật ảnh, dịch vụ, bảng giá, cảm nhận khách hàng và thông tin liên hệ. Toàn bộ dịch vụ đi kèm đều có gói miễn phí.
 
-First, run the development server:
+| Thành phần | Công nghệ |
+|---|---|
+| Framework | Next.js 16 (App Router, Cache Components) + TypeScript |
+| Giao diện | Tailwind CSS v4, Framer Motion, yet-another-react-lightbox, dnd-kit |
+| Database + đăng nhập admin | Supabase (Postgres + Auth, RLS) |
+| Ảnh | Cloudinary (upload thẳng từ trình duyệt, tối ưu `f_auto,q_auto,w_xxx`) |
+| Email form liên hệ | Resend |
+| Hosting | Vercel |
+
+## Chạy thử ngay (chưa cần tài khoản gì)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở http://localhost:3000. Khi chưa có `.env.local`, trang chạy bằng **dữ liệu mẫu** (`src/lib/mock-data.ts`) để xem giao diện. Trang admin sẽ hiện thông báo "Chưa cấu hình Supabase".
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tài khoản cần tạo (tất cả miễn phí)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Bạn tự tạo các tài khoản dưới đây bằng email của mình, sau đó sao chép các khoá vào file `.env.local` (copy từ `.env.example`). **Không gửi mật khẩu hay API key cho ai khác.**
 
-## Learn More
+### 1. Supabase (bắt buộc cho admin)
 
-To learn more about Next.js, take a look at the following resources:
+1. Vào https://supabase.com → New project. Chọn region **Singapore** cho nhanh ở Việt Nam. Đặt mật khẩu database (lưu lại).
+2. Vào **SQL Editor → New query**, dán toàn bộ nội dung file `supabase/schema.sql` → **Run**.
+3. Vào **Authentication → Users → Add user → Create new user**: nhập email + mật khẩu cho chủ sở hữu trang. Tick "Auto Confirm User".
+4. Vào **Authentication → Sign In / Providers → Email** và **TẮT "Allow new users to sign up"**. Nếu không tắt, người lạ có thể tự đăng ký và sửa trang.
+5. Vào **Project Settings → API**, copy:
+   - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
+   - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Cloudinary (bắt buộc để upload ảnh)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Vào https://cloudinary.com → đăng ký free.
+2. Ở **Dashboard** (hoặc Settings → API Keys), copy:
+   - `Cloud name` → `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
+   - `API Key` → `CLOUDINARY_API_KEY`
+   - `API Secret` → `CLOUDINARY_API_SECRET`
 
-## Deploy on Vercel
+### 3. Resend (tuỳ chọn, để nhận email khi khách gửi form)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Vào https://resend.com → đăng ký → **API Keys → Create** → copy vào `RESEND_API_KEY`.
+2. `CONTACT_TO_EMAIL`: email của bạn để nhận thông báo đặt lịch.
+3. Chưa xác minh domain thì giữ `CONTACT_FROM_EMAIL=Portfolio <onboarding@resend.dev>` (Resend chỉ cho gửi tới đúng email đã đăng ký tài khoản). Khi có tên miền riêng, thêm domain trong Resend rồi đổi `from` sang email thuộc domain đó.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nếu bỏ qua Resend, form vẫn hoạt động ở chế độ demo (ghi log trên server), khách vẫn có nút Zalo / gọi điện.
+
+### 4. GitHub + Vercel (để đưa trang lên mạng)
+
+1. Tạo repo trên https://github.com và push code lên.
+2. Vào https://vercel.com → **Add New → Project** → chọn repo → ở bước **Environment Variables** dán toàn bộ biến trong `.env.local` (đổi `NEXT_PUBLIC_SITE_URL` thành `https://tenban.vercel.app`) → Deploy.
+3. Từ đó mỗi lần push code, Vercel tự deploy lại.
+
+### 5. Giữ Supabase không bị tạm dừng
+
+Supabase free tạm dừng project sau 7 ngày không hoạt động. Workflow `.github/workflows/keep-alive.yml` gọi `/api/keep-alive` 3 ngày một lần. Trong GitHub repo → **Settings → Secrets and variables → Actions**, thêm:
+
+- `SITE_URL` = `https://tenban.vercel.app`
+- `KEEP_ALIVE_SECRET` = chuỗi ngẫu nhiên bất kỳ, **giống** giá trị `KEEP_ALIVE_SECRET` đã đặt trên Vercel.
+
+## Cấu trúc dự án
+
+```
+src/
+├─ app/
+│  ├─ (public)/                 # Trang chủ one-page + /portfolio/[category]
+│  ├─ admin/
+│  │  ├─ login/                 # Đăng nhập (Supabase Auth)
+│  │  ├─ (protected)/           # Dashboard, photos, categories, services, testimonials, settings
+│  │  └─ actions.ts             # Server actions: kiểm tra user + ghi DB + updateTag('site')
+│  ├─ api/
+│  │  ├─ cloudinary-sign/       # Ký upload (chỉ admin đã đăng nhập)
+│  │  ├─ contact/               # Nhận form, gửi email qua Resend
+│  │  └─ keep-alive/            # Giữ Supabase thức
+│  ├─ sitemap.ts, robots.ts
+├─ components/  (ui/, sections/, admin/)
+├─ lib/
+│  ├─ data.ts                   # getSiteData(): 'use cache' + cacheTag, dùng mock khi chưa có Supabase
+│  ├─ supabase/ (client, server, public)
+│  ├─ cloudinary.ts / cloudinary-server.ts
+│  └─ mock-data.ts
+└─ proxy.ts                     # Bảo vệ /admin (tên mới của middleware.ts trong Next.js 16)
+supabase/schema.sql             # Tạo bảng + RLS
+.github/workflows/keep-alive.yml
+```
+
+## Cách hoạt động
+
+- **Trang public** gần như tĩnh: toàn bộ dữ liệu lấy một lần trong `getSiteData()` (được cache với tag `site`). Khi admin lưu bất kỳ thứ gì, server action gọi `updateTag('site')` nên trang public cập nhật ngay.
+- **Upload ảnh**: trình duyệt xin chữ ký từ `/api/cloudinary-sign` rồi upload thẳng lên Cloudinary (không qua Vercel). Sau đó lưu `url`, `public_id`, `width`, `height` vào bảng `photos`. Xoá ảnh sẽ xoá luôn trên Cloudinary.
+- **Before / After**: ảnh nào có `before_url` sẽ xuất hiện trong mục so sánh. Trong admin, bấm vào ảnh → thêm "Ảnh BEFORE".
+- **Bảo mật**: `proxy.ts` chặn `/admin` khi chưa đăng nhập; mỗi server action kiểm tra user lại; RLS trong Postgres chỉ cho `authenticated` ghi dữ liệu; Cloudinary API secret chỉ ở server.
+
+## Lệnh
+
+```bash
+npm run dev     # phát triển
+npm run build   # build production
+npm run start   # chạy bản build
+npm run lint    # kiểm tra lint
+```
+
+## Tên miền riêng (sau này)
+
+Mua `.com` ở Cloudflare Registrar hoặc Namecheap (~250–300k/năm), hoặc `.vn` ở nhà đăng ký trong nước. Trong Vercel → Project → **Domains** → thêm domain và trỏ DNS theo hướng dẫn. Nhớ đổi `NEXT_PUBLIC_SITE_URL` và `SITE_URL` (GitHub secret).
