@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0b0b0c;
-  --bg-2: #151517;
-  --line: #2a2a2d;
-  --text: #f5f1ea;
-  --muted: #9a958c;
-  --gold: #c9a96e;
-  --gold-hover: #e0c48f;
+  --bg: #fcf6f4; /* ngà hồng */
+  --bg-2: #f7e9e5; /* hồng phấn */
+  --surface: #ffffff;
+  --line: #eedad4;
+  --text: #2b1f1f; /* nâu đen ánh hồng */
+  --muted: #83706c;
+  --gold: #a96b5e; /* vàng hồng (rose gold), đủ tương phản trên nền sáng */
+  --gold-hover: #c0847a;
+  --gold-soft: #f3d9d2;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-gold-soft: var(--gold-soft);
   --color-line: var(--line);
   --color-ink: var(--text);
   --color-muted: var(--muted);
@@ -25,7 +29,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 4.5rem; /* chừa chỗ cho header cố định khi nhảy tới #section */
-  color-scheme: dark;
+  color-scheme: light;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -43,7 +47,8 @@ body::before {
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.022;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -144,7 +149,7 @@ body::before {
   width: 100%;
   border-radius: 0.5rem;
   border: 1px solid var(--line);
-  background: var(--bg);
+  background: var(--surface);
   padding: 0.6rem 0.8rem;
   font-size: 0.9rem;
   color: var(--text);
@@ -154,5 +159,5 @@ body::before {
   border-color: var(--gold);
 }
 .input::placeholder {
-  color: #6b675f;
+  color: #b3a09b;
 }

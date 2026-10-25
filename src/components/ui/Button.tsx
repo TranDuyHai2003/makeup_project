@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 type Variant = "gold" | "outline" | "ghost" | "danger";
 
 const styles: Record<Variant, string> = {
-  gold: "bg-gold text-bg hover:bg-gold-hover shadow-[0_8px_30px_-12px_rgba(201,169,110,.6)]",
-  outline: "border border-gold/60 text-gold hover:bg-gold hover:text-bg",
+  gold: "bg-gold text-white hover:bg-gold-hover shadow-[0_10px_30px_-12px_rgba(169,107,94,.55)]",
+  outline: "border border-gold/50 text-gold hover:bg-gold hover:text-white",
   ghost: "text-muted hover:text-ink",
-  danger: "border border-red-500/40 text-red-300 hover:bg-red-500/10",
+  danger: "border border-red-500/40 text-red-600 hover:bg-red-500/10",
 };
 
 const base =

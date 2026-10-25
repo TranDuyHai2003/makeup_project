@@ -47,7 +47,7 @@ export function SmartImage({ src, alt, width, height, sizes = "100vw", maxWidth 
       }}
     >
       {failed ? (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#2a2320] via-bg-2 to-[#1b1a16]" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#f5e2dd] via-bg-2 to-[#edd3cc]" aria-hidden />
       ) : (
         <img
           ref={ref}

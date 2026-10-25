@@ -88,7 +88,7 @@ export function PhotoUploader({ categories }: { categories: Category[] }) {
             <li key={i} className="relative overflow-hidden rounded-lg border border-line bg-bg">
               <img src={URL.createObjectURL(it.file)} alt="" className="aspect-square w-full object-cover opacity-70" />
               <div className="absolute inset-x-0 bottom-0 h-1 bg-line"><div className={cn("h-full", it.status === "error" ? "bg-red-400" : "bg-gold")} style={{ width: `${it.progress}%` }} /></div>
-              {it.status === "error" && <span className="absolute inset-0 flex items-center justify-center bg-bg/70 p-1 text-center text-[10px] text-red-300">{it.error}</span>}
+              {it.status === "error" && <span className="absolute inset-0 flex items-center justify-center bg-bg/70 p-1 text-center text-[10px] text-red-600">{it.error}</span>}
             </li>
           ))}
         </ul>

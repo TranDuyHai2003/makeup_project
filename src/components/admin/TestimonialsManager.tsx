@@ -30,14 +30,14 @@ export function TestimonialsManager({ testimonials }: { testimonials: Testimonia
       {!editing && <Button variant="outline" onClick={() => setEditing("new")} className="px-5 py-2.5"><Plus size={14} />Thêm cảm nhận</Button>}
       <ul className="grid gap-3 md:grid-cols-2">
         {testimonials.map((t) => (
-          <li key={t.id} className="flex gap-3 rounded-2xl border border-line bg-bg-2 p-4">
+          <li key={t.id} className="flex gap-3 rounded-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)] p-4">
             {t.photo_url && <img src={t.photo_url} alt="" className="h-10 w-10 shrink-0 rounded-full object-cover" />}
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2"><span className="font-medium">{t.client_name}</span><span className="flex text-gold">{Array.from({ length: t.rating }).map((_, i) => <Star key={i} size={10} fill="currentColor" />)}</span></div>
               <p className="mt-1 text-sm text-muted">{t.content}</p>
             </div>
             <button onClick={() => setEditing(t)} className="self-start text-muted hover:text-ink"><Pencil size={16} /></button>
-            <button onClick={() => remove(t)} className="self-start text-muted hover:text-red-300"><Trash2 size={16} /></button>
+            <button onClick={() => remove(t)} className="self-start text-muted hover:text-red-600"><Trash2 size={16} /></button>
           </li>
         ))}
         {testimonials.length === 0 && <li className="p-6 text-center text-sm text-muted md:col-span-2">Chưa có cảm nhận nào.</li>}

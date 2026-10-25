@@ -50,7 +50,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
           <div className="flex items-center gap-3"><SubmitButton>Thêm</SubmitButton><ResultMessage result={result} /></div>
         </form>
       </Card>
-      <ul className="divide-y divide-line self-start rounded-2xl border border-line bg-bg-2">
+      <ul className="divide-y divide-line self-start rounded-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)]">
         {categories.map((c, i) => (
           <li key={c.id} className="flex items-center gap-3 p-4">
             <button onClick={() => rename(c)} className="flex-1 text-left">
@@ -59,7 +59,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
             </button>
             <button onClick={() => move(i, -1)} disabled={i === 0} className="text-muted hover:text-ink disabled:opacity-30"><ArrowUp size={16} /></button>
             <button onClick={() => move(i, 1)} disabled={i === categories.length - 1} className="text-muted hover:text-ink disabled:opacity-30"><ArrowDown size={16} /></button>
-            <button onClick={() => remove(c)} className="text-muted hover:text-red-300"><Trash2 size={16} /></button>
+            <button onClick={() => remove(c)} className="text-muted hover:text-red-600"><Trash2 size={16} /></button>
           </li>
         ))}
         {categories.length === 0 && <li className="p-6 text-center text-sm text-muted">Chưa có danh mục.</li>}

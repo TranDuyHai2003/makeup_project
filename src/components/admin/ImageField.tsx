@@ -40,11 +40,11 @@ export function ImageField({ label, name, defaultValue, hint }: { label: string;
             <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} disabled={progress !== null} />
           </label>
           {url && (
-            <button type="button" onClick={() => setUrl("")} className="ml-2 inline-flex items-center gap-1 text-xs text-muted hover:text-red-300"><X size={12} />Bỏ ảnh</button>
+            <button type="button" onClick={() => setUrl("")} className="ml-2 inline-flex items-center gap-1 text-xs text-muted hover:text-red-600"><X size={12} />Bỏ ảnh</button>
           )}
           <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="hoặc dán URL ảnh" className="input text-xs" />
           {hint && <p className="text-xs text-muted">{hint}</p>}
-          {error && <p className="text-xs text-red-300">{error}</p>}
+          {error && <p className="text-xs text-red-600">{error}</p>}
         </div>
       </div>
     </div>

@@ -60,7 +60,7 @@ export function Header({ name }: { name: string }) {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500",
-        solid ? "border-b border-line/70 bg-bg/80 backdrop-blur-xl" : "border-b border-transparent bg-transparent",
+        solid ? "border-b border-line/80 bg-bg/85 shadow-[0_8px_30px_-24px_rgba(90,40,40,.35)] backdrop-blur-xl" : "border-b border-transparent bg-transparent",
       )}
     >
       <div className={cn("mx-auto flex max-w-6xl items-center justify-between px-5 transition-[padding] duration-500 md:px-8", scrolled ? "py-3" : "py-4 md:py-5")}>
@@ -81,7 +81,7 @@ export function Header({ name }: { name: string }) {
               <span className={cn("absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-500", active === l.id ? "scale-x-100" : "scale-x-0")} />
             </Link>
           ))}
-          <Link href="/#contact" className="whitespace-nowrap rounded-full border border-gold/60 px-5 py-2 text-[0.68rem] uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-bg">
+          <Link href="/#contact" className="whitespace-nowrap rounded-full border border-gold/60 px-5 py-2 text-[0.68rem] uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-white">
             Đặt lịch
           </Link>
         </nav>
@@ -102,10 +102,10 @@ export function Header({ name }: { name: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 flex h-[100dvh] flex-col bg-bg/97 px-6 pb-safe pt-24 backdrop-blur-xl lg:hidden"
+            className="fixed inset-0 z-40 flex h-[100dvh] flex-col bg-bg/[0.98] px-6 pb-safe pt-24 backdrop-blur-xl lg:hidden"
             aria-label="Menu mobile"
           >
-            <div className="pointer-events-none absolute -top-32 right-[-30%] h-96 w-96 rounded-full bg-gold/10 blur-3xl" aria-hidden />
+            <div className="pointer-events-none absolute -top-32 right-[-30%] h-96 w-96 rounded-full bg-gold-soft/70 blur-3xl" aria-hidden />
             <ul className="flex flex-1 flex-col justify-center gap-1">
               {links.map((l, i) => (
                 <motion.li key={l.id} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.05, duration: 0.4 }}>
@@ -123,7 +123,7 @@ export function Header({ name }: { name: string }) {
             <Link
               href="/#contact"
               onClick={() => setOpen(false)}
-              className="mb-6 flex items-center justify-center rounded-full bg-gold py-4 text-xs uppercase tracking-[0.25em] text-bg"
+              className="mb-6 flex items-center justify-center rounded-full bg-gold py-4 text-xs uppercase tracking-[0.25em] text-white shadow-[0_10px_30px_-12px_rgba(169,107,94,.6)]"
             >
               Đặt lịch ngay
             </Link>

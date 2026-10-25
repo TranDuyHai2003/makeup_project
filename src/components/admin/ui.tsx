@@ -16,7 +16,7 @@ export function PageTitle({ title, description, children }: { title: string; des
 }
 
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border border-line bg-bg-2 p-5 md:p-6 ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)] p-5 md:p-6 ${className}`}>{children}</div>;
 }
 
 export function Label({ children }: { children: React.ReactNode }) {
@@ -47,5 +47,5 @@ export function SubmitButton({ children = "Lưu", variant = "gold" as const }: {
 
 export function ResultMessage({ result }: { result: ActionResult | null }) {
   if (!result) return null;
-  return result.ok ? <p className="text-sm text-gold">Đã lưu.</p> : <p className="text-sm text-red-300">{result.error}</p>;
+  return result.ok ? <p className="text-sm text-gold">Đã lưu.</p> : <p className="text-sm text-red-600">{result.error}</p>;
 }

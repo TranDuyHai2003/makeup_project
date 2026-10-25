@@ -35,7 +35,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
       {!editing && (
         <Button variant="outline" onClick={() => setEditing("new")} className="px-5 py-2.5"><Plus size={14} />Thêm dịch vụ</Button>
       )}
-      <ul className="divide-y divide-line rounded-2xl border border-line bg-bg-2">
+      <ul className="divide-y divide-line rounded-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)]">
         {services.map((s) => (
           <li key={s.id} className="flex items-start gap-4 p-4">
             <div className="min-w-0 flex-1">
@@ -43,7 +43,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
               <p className="mt-1 text-sm text-muted">{s.description}</p>
             </div>
             <button onClick={() => setEditing(s)} className="text-muted hover:text-ink"><Pencil size={16} /></button>
-            <button onClick={() => remove(s)} className="text-muted hover:text-red-300"><Trash2 size={16} /></button>
+            <button onClick={() => remove(s)} className="text-muted hover:text-red-600"><Trash2 size={16} /></button>
           </li>
         ))}
         {services.length === 0 && <li className="p-6 text-center text-sm text-muted">Chưa có dịch vụ nào.</li>}

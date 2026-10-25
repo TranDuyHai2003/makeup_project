@@ -15,7 +15,7 @@ export function Services({ services }: { services: Service[] }) {
           {services.map((s, i) => (
             <Reveal key={s.id} delay={Math.min(i, 4) * 0.05}>
               <div className="group relative grid grid-cols-[auto_1fr_auto] gap-x-4 gap-y-2 border-b border-line py-6 md:grid-cols-[3rem_1fr_1.6fr_8.5rem] md:items-baseline md:gap-x-10 md:py-8">
-                <span className="font-display pt-1 text-sm text-gold/70 md:pt-0">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-display pt-1 text-sm text-gold md:pt-0">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="font-display text-[1.45rem] font-light leading-snug transition-colors duration-300 group-hover:text-gold md:text-[1.75rem]">{s.title}</h3>
                 <div className="row-start-1 col-start-3 whitespace-nowrap pt-1.5 text-right md:col-start-4 md:pt-0">
                   {s.price_from != null && <span className="mr-1 text-[0.65rem] uppercase tracking-[0.15em] text-muted">từ</span>}

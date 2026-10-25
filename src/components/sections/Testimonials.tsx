@@ -12,7 +12,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
 
   return (
     <section id="testimonials" className="relative overflow-hidden py-24 md:py-36">
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/[0.06] blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-soft/50 blur-3xl" aria-hidden />
       <div className="relative mx-auto max-w-6xl md:px-8">
         <div className="px-5 md:px-0">
           <SectionHeading eyebrow="Cảm nhận khách hàng" title="Lời nhắn gửi lại" />
@@ -25,12 +25,12 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
         >
           {testimonials.map((t) => (
             <div key={t.id} className={cn("w-[85%] shrink-0 snap-start sm:w-[60%]", gridOnDesktop ? "md:w-auto" : "md:w-[31%]")}>
-              <figure className="flex h-full flex-col border border-line bg-bg-2/60 p-7 backdrop-blur-sm md:p-9">
+              <figure className="flex h-full flex-col border border-line/70 bg-surface p-7 shadow-[0_20px_50px_-30px_rgba(90,40,40,.25)] md:p-9">
                 <div className="flex items-center justify-between">
                   <div className="flex gap-1 text-gold" aria-label={`${t.rating ?? 5} sao`}>
                     {Array.from({ length: t.rating ?? 5 }).map((_, k) => <Star key={k} size={13} fill="currentColor" strokeWidth={0} />)}
                   </div>
-                  <Quote size={28} className="text-gold/25" strokeWidth={1} />
+                  <Quote size={28} className="text-gold/30" strokeWidth={1} />
                 </div>
                 <blockquote className="font-display mt-6 flex-1 text-[1.35rem] font-light italic leading-relaxed text-ink/90 md:text-2xl">
                   “{t.content}”

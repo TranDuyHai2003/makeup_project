@@ -43,7 +43,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
       <nav
         aria-label="Liên hệ nhanh"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-30 border-t border-line/80 bg-bg/90 px-3 pt-2.5 pb-safe backdrop-blur-xl transition-transform duration-500 md:hidden",
+          "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/90 px-3 shadow-[0_-10px_30px_-20px_rgba(90,40,40,.3)] pt-2.5 pb-safe backdrop-blur-xl transition-transform duration-500 md:hidden",
           show ? "translate-y-0" : "translate-y-full",
         )}
       >
@@ -55,7 +55,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
               {...(it.internal ? {} : { target: "_blank", rel: "noreferrer" })}
               className={cn(
                 "flex h-12 items-center justify-center gap-2 rounded-full text-[0.68rem] uppercase tracking-[0.15em] transition-colors",
-                it.primary ? "bg-[#0068ff] text-white" : "border border-line text-ink active:border-gold active:text-gold",
+                it.primary ? "bg-[#0068ff] text-white" : "border border-line bg-surface text-ink active:border-gold active:text-gold",
               )}
             >
               {it.primary ? (
@@ -77,7 +77,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
           target="_blank"
           rel="noreferrer"
           aria-label="Nhắn Zalo"
-          className="fixed right-6 bottom-6 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-[#0068ff] text-white shadow-lg shadow-black/40 transition-transform hover:scale-105 md:flex"
+          className="fixed right-6 bottom-6 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-[#0068ff] text-white shadow-lg shadow-[#0068ff]/30 transition-transform hover:scale-105 md:flex"
         >
           <span className="text-[0.7rem] font-semibold tracking-wide">Zalo</span>
           <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-[#0068ff]/30 [animation-duration:2.5s]" />

@@ -37,7 +37,7 @@ export function Footer({ settings }: { settings: Settings }) {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={s.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-gold hover:text-gold"
                   >
                     {s.icon}
                   </a>

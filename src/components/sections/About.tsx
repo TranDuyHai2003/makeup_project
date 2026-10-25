@@ -13,7 +13,7 @@ export function About({ settings }: { settings: Settings }) {
       <Reveal className="mx-auto w-full max-w-[22rem] md:max-w-none">
         <div className="relative">
           {/* Khung gold lệch về góc, tạo chiều sâu */}
-          <div className="absolute inset-0 translate-x-3 translate-y-3 border border-gold/40 md:translate-x-5 md:translate-y-5" aria-hidden />
+          <div className="absolute inset-0 translate-x-3 translate-y-3 border border-gold/45 md:translate-x-5 md:translate-y-5" aria-hidden />
           {settings.avatar_url ? (
             <SmartImage src={settings.avatar_url} alt={settings.artist_name ?? ""} width={4} height={5} sizes="(min-width: 768px) 40vw, 22rem" maxWidth={1000} />
           ) : (

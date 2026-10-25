@@ -55,7 +55,7 @@ export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: str
   const animate = !touched;
 
   return (
-    <div ref={ref} className="relative select-none overflow-hidden bg-bg" style={{ aspectRatio: `${Math.max(ratio, 0.66)}` }}>
+    <div ref={ref} className="relative select-none overflow-hidden bg-bg-2 shadow-[0_30px_60px_-30px_rgba(90,40,40,.35)]" style={{ aspectRatio: `${Math.max(ratio, 0.66)}` }}>
       <img src={cldUrl(after, 1200)} srcSet={cldSrcSet(after, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - sau`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
       <div
         className={animate ? "absolute inset-0 transition-[clip-path] duration-500 ease-in-out" : "absolute inset-0"}
@@ -64,15 +64,15 @@ export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: str
         <img src={cldUrl(before, 1200)} srcSet={cldSrcSet(before, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - trước`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
       </div>
       <div
-        className={animate ? "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-gold/90 shadow-[0_0_12px_rgba(201,169,110,.6)] transition-[left] duration-500 ease-in-out" : "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-gold/90 shadow-[0_0_12px_rgba(201,169,110,.6)]"}
+        className={animate ? "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_14px_rgba(0,0,0,.35)] transition-[left] duration-500 ease-in-out" : "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_14px_rgba(0,0,0,.35)]"}
         style={{ left: `${pos}%` }}
       >
-        <div className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gold bg-bg/75 text-gold shadow-lg backdrop-blur">
+        <div className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/85 text-gold shadow-lg backdrop-blur">
           <ChevronsLeftRight size={20} strokeWidth={1.5} />
         </div>
       </div>
-      <span className="pointer-events-none absolute top-3 left-3 rounded-full bg-bg/70 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink/90 backdrop-blur">Trước</span>
-      <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-gold/90 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-bg">Sau</span>
+      <span className="pointer-events-none absolute top-3 left-3 rounded-full bg-white/80 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink backdrop-blur">Trước</span>
+      <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-gold px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-white">Sau</span>
       <input
         type="range"
         min={0}

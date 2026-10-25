@@ -41,7 +41,7 @@ function LoginForm() {
 
   return (
     <main className="flex min-h-svh items-center justify-center px-5">
-      <form onSubmit={onSubmit} className="w-full max-w-sm space-y-5 rounded-2xl border border-line bg-bg-2 p-8">
+      <form onSubmit={onSubmit} className="w-full max-w-sm space-y-5 rounded-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)] p-8">
         <div className="text-center">
           <p className="eyebrow">Admin</p>
           <h1 className="font-display mt-2 text-3xl font-light">Đăng nhập</h1>
@@ -59,7 +59,7 @@ function LoginForm() {
           <label className="mb-2 block text-[0.65rem] uppercase tracking-[0.25em] text-muted">Mật khẩu</label>
           <input name="password" type="password" required autoComplete="current-password" className="input" />
         </div>
-        {error && <p className="text-sm text-red-300">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <Button type="submit" disabled={loading || !configured} className="w-full">
           {loading ? "Đang đăng nhập..." : "Đăng nhập"}
         </Button>

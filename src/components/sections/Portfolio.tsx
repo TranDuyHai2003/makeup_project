@@ -81,14 +81,14 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
                 imgClassName="duration-[1.2s] group-hover:scale-[1.04]"
               />
               {/* Chú thích: luôn hiện nhẹ trên mobile, hiện khi rê chuột trên PC */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/75 via-black/25 to-transparent p-3 pt-10 transition-opacity duration-500 md:p-5 md:pt-16 md:opacity-0 md:group-hover:opacity-100">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/65 via-black/15 to-transparent p-3 pt-10 transition-opacity duration-500 md:p-5 md:pt-16 md:opacity-0 md:group-hover:opacity-100">
                 <div className="min-w-0">
                   {active === "all" && catName(p.category_id) && (
-                    <p className="hidden text-[0.6rem] uppercase tracking-[0.25em] text-gold md:block">{catName(p.category_id)}</p>
+                    <p className="hidden text-[0.6rem] uppercase tracking-[0.25em] text-gold-soft md:block">{catName(p.category_id)}</p>
                   )}
-                  {p.caption && <p className="font-display truncate text-[0.95rem] leading-tight text-ink md:mt-1 md:text-xl">{p.caption}</p>}
+                  {p.caption && <p className="font-display truncate text-[0.95rem] leading-tight text-white md:mt-1 md:text-xl">{p.caption}</p>}
                 </div>
-                <Expand size={16} className="hidden shrink-0 text-ink/80 md:block" />
+                <Expand size={16} className="hidden shrink-0 text-white/85 md:block" />
               </div>
             </motion.button>
           ))}
@@ -122,13 +122,13 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
                 <Reveal key={c.id} delay={i * 0.06}>
                   <Link href={`/portfolio/${c.slug}`} className="group relative block aspect-[3/4] overflow-hidden">
                     <SmartImage src={cover.url} alt={c.name} fill sizes="(min-width: 768px) 25vw, 50vw" maxWidth={640} imgClassName="duration-[1.2s] group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent transition-colors duration-500 group-hover:from-black/60" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent transition-colors duration-500 group-hover:from-black/55" />
                     <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 md:p-5">
                       <div>
-                        <p className="font-display text-xl font-light leading-tight md:text-2xl">{c.name}</p>
-                        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink/70">{inCat.length} ảnh</p>
+                        <p className="font-display text-xl font-light leading-tight text-white md:text-2xl">{c.name}</p>
+                        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.25em] text-white/75">{inCat.length} ảnh</p>
                       </div>
-                      <ArrowUpRight size={18} className="text-gold transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
+                      <ArrowUpRight size={18} className="text-gold-soft transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
                     </div>
                   </Link>
                 </Reveal>
@@ -150,7 +150,7 @@ function FilterChip({ active, onClick, children }: { active: boolean; onClick: (
       aria-pressed={active}
       className={cn(
         "whitespace-nowrap rounded-full border px-5 py-2.5 text-[0.65rem] uppercase tracking-[0.22em] transition-colors duration-300",
-        active ? "border-gold bg-gold text-bg" : "border-line text-muted hover:border-gold/60 hover:text-ink",
+        active ? "border-gold bg-gold text-white shadow-[0_6px_20px_-10px_rgba(169,107,94,.7)]" : "border-line bg-surface/60 text-muted hover:border-gold/60 hover:text-ink",
       )}
     >
       {children}

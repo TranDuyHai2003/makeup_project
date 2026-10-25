@@ -118,7 +118,7 @@ function SortableCard({ photo, category, onEdit, onFeatured, onDelete, sortable 
       </div>
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-bg to-transparent p-2 text-[11px]">
         <span className="truncate text-muted">{category ?? "—"}{photo.before_url ? " · B/A" : ""}</span>
-        <button onClick={onDelete} className="rounded-md bg-bg/70 p-1 text-muted hover:text-red-300"><Trash2 size={14} /></button>
+        <button onClick={onDelete} className="rounded-md bg-bg/70 p-1 text-muted hover:text-red-600"><Trash2 size={14} /></button>
       </div>
     </li>
   );
@@ -145,7 +145,7 @@ function EditDialog({ photo, categories, onClose, onSaved }: { photo: Photo; cat
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 md:items-center md:p-6" onClick={onClose}>
-      <form onSubmit={onSubmit} onClick={(e) => e.stopPropagation()} className="max-h-[90svh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-2xl border border-line bg-bg-2 p-5 md:rounded-2xl">
+      <form onSubmit={onSubmit} onClick={(e) => e.stopPropagation()} className="max-h-[90svh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-2xl border border-line bg-surface shadow-[0_12px_30px_-24px_rgba(90,40,40,.3)] p-5 md:rounded-2xl">
         <div className="flex items-center justify-between">
           <h3 className="font-display text-2xl">Sửa ảnh</h3>
           <button type="button" onClick={onClose} className="text-muted hover:text-ink"><X /></button>
@@ -163,7 +163,7 @@ function EditDialog({ photo, categories, onClose, onSaved }: { photo: Photo; cat
           </select>
         </div>
         <ImageField label="Ảnh BEFORE (tuỳ chọn)" name="before_url" defaultValue={photo.before_url} hint="Thêm ảnh mặt mộc để ảnh này xuất hiện trong mục Before / After." />
-        {error && <p className="text-sm text-red-300">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onClose} className="px-4 py-2">Huỷ</Button>
           <Button type="submit" disabled={pending} className="px-5 py-2">{pending ? "Đang lưu..." : "Lưu"}</Button>

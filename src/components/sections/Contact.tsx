@@ -16,7 +16,7 @@ export function Contact({ settings }: { settings: Settings }) {
   if (messenger) channels.push({ href: messenger, label: "Messenger", hint: "Nhắn tin qua Facebook", icon: <MessageCircle size={20} />, accent: "#0084ff" });
   if (zalo) channels.push({ href: zalo, label: "Zalo", hint: settings.zalo?.startsWith("http") ? "Nhắn tin qua Zalo" : `Zalo ${settings.zalo}`, icon: <span className="text-xs font-bold">Zalo</span>, accent: "#0068ff" });
   if (settings.instagram) channels.push({ href: settings.instagram, label: "Instagram", hint: "Nhắn tin qua Instagram", icon: <Camera size={20} />, accent: "#e1306c" });
-  if (settings.tiktok) channels.push({ href: settings.tiktok, label: "TikTok", hint: "Xem thêm video", icon: <span className="text-xs font-bold">TT</span>, accent: "#ffffff" });
+  if (settings.tiktok) channels.push({ href: settings.tiktok, label: "TikTok", hint: "Xem thêm video", icon: <span className="text-xs font-bold">TT</span>, accent: "#111111" });
 
   const names = channels.filter((c) => c.label !== "TikTok").map((c) => c.label);
   const via = names.length > 1 ? `${names.slice(0, -1).join(", ")} hoặc ${names[names.length - 1]}` : names[0];
@@ -46,7 +46,7 @@ export function Contact({ settings }: { settings: Settings }) {
           <div className="space-y-4">
             {channels.map((c) => <ChannelCard key={c.label} {...c} />)}
             {tel && (
-              <ChannelCard href={tel} label="Gọi điện" hint={settings.phone ?? ""} icon={<Phone size={20} />} accent="#c9a96e" external={false} />
+              <ChannelCard href={tel} label="Gọi điện" hint={settings.phone ?? ""} icon={<Phone size={20} />} accent="#a96b5e" external={false} />
             )}
             {channels.length === 0 && !tel && (
               <p className="text-sm text-muted">Thông tin liên hệ đang được cập nhật.</p>
@@ -63,9 +63,9 @@ function ChannelCard({ href, label, hint, icon, accent, external = true }: Chann
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className="group flex items-center gap-4 rounded-2xl border border-line bg-bg/40 px-4 py-4 transition-[border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-gold active:scale-[0.99] md:gap-5 md:px-5"
+      className="group flex items-center gap-4 rounded-2xl border border-line/80 bg-surface px-4 py-4 shadow-[0_12px_30px_-22px_rgba(90,40,40,.35)] transition-[border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-gold active:scale-[0.99] md:gap-5 md:px-5"
     >
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: accent, color: accent === "#ffffff" ? "#000" : "#fff" }}>
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: accent }}>
         {icon}
       </span>
       <span className="min-w-0 flex-1">
