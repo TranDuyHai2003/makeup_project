@@ -14,11 +14,15 @@ export const BRAND = {
 // Những từ chung chung không dùng để tạo chữ lồng
 const GENERIC = new Set(["makeup", "make", "up", "artist", "mua", "studio", "beauty", "by", "the", "&", "and", "và"]);
 
-/** "Trà My Makeup" → "TM", "Linh Nguyễn Beauty" → "LN", "Makeup Artist 1" → "MA". */
+/**
+ * "Trà My Makeup" → "TM", "Nguyễn Trà My" → "TM" (tên Việt: bỏ họ, lấy tên gọi), "Makeup Artist 1" → "MA".
+ * Từ 3 chữ trở lên lấy 2 chữ cuối, vì họ người Việt đứng đầu và tên gọi đứng cuối.
+ */
 export function monogram(name: string | null | undefined): string {
   const words = (name ?? "").trim().split(/\s+/).filter(Boolean);
   const meaningful = words.filter((w) => !GENERIC.has(w.toLowerCase()) && /\p{L}/u.test(w));
-  const pick = (meaningful.length ? meaningful : words).filter((w) => /\p{L}/u.test(w)).slice(0, 2);
+  const letters_ = (meaningful.length ? meaningful : words).filter((w) => /\p{L}/u.test(w));
+  const pick = letters_.length >= 3 ? letters_.slice(-2) : letters_.slice(0, 2);
   const letters = pick.map((w) => [...w.normalize("NFC")].find((c) => /\p{L}/u.test(c)) ?? "").join("");
   return (letters || "M").toLocaleUpperCase("vi");
 }
