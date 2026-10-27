@@ -14,12 +14,16 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
   const data = await getCategoryBySlug(category);
-  if (!data.category) return { title: "Không tìm thấy" };
-  const title = `Makeup ${data.category.name} · ${data.settings.artist_name}`;
+  if (!data.category) return { title: "Không tìm thấy", robots: { index: false } };
+  const name = data.settings.artist_name ?? "Makeup Artist";
+  const title = `Album makeup ${data.category.name}`;
+  const description = `${data.photos.length} ảnh makeup ${data.category.name.toLowerCase()} của ${name}${data.settings.address ? ` tại ${data.settings.address}` : ""}.`;
   return {
-    title,
-    description: `Album makeup ${data.category.name.toLowerCase()} của ${data.settings.artist_name}.`,
-    openGraph: { title, images: data.photos[0] ? [{ url: data.photos[0].url }] : undefined },
+    title, // template gốc tự thêm " · <tên thương hiệu>"
+    description,
+    alternates: { canonical: `/portfolio/${data.category.slug}` },
+    openGraph: { title: `${title} · ${name}`, description, url: `/portfolio/${data.category.slug}` },
+    twitter: { card: "summary_large_image", title: `${title} · ${name}`, description },
   };
 }
 

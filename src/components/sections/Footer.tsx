@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Camera, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import { Year } from "@/components/ui/Year";
 import type { Settings } from "@/lib/types";
 import { messengerLink, telLink, zaloLink } from "@/lib/utils";
@@ -26,7 +27,7 @@ export function Footer({ settings }: { settings: Settings }) {
       <div className="mx-auto max-w-6xl px-5 pt-16 pb-10 md:px-8 md:pt-20">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="font-display text-3xl font-light md:text-4xl">{settings.artist_name}</Link>
+            <Link href="/" aria-label="Trang chủ"><Logo name={settings.artist_name ?? "Makeup Artist"} size="lg" /></Link>
             {settings.tagline && <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{settings.tagline}</p>}
             {socials.length > 0 && (
               <div className="mt-6 flex gap-2.5">

@@ -55,6 +55,18 @@ Supabase free tạm dừng project sau 7 ngày không hoạt động. Workflow `
 - `SITE_URL` = `https://tenban.vercel.app`
 - `KEEP_ALIVE_SECRET` = chuỗi ngẫu nhiên bất kỳ, **giống** giá trị `KEEP_ALIVE_SECRET` đã đặt trên Vercel.
 
+## Logo, favicon, tiêu đề (tự động)
+
+Không cần thiết kế file ảnh. Tất cả sinh từ **tên nghệ sĩ** trong Admin → Cài đặt, đổi tên là đổi theo:
+
+- **Logo** (header, footer): chữ lồng viết tắt trong vòng tròn vàng hồng + tên. "Trà My Makeup" → **TM** (bỏ các từ chung như Makeup, Artist, MUA, Studio).
+- **Favicon** (tab trình duyệt), **icon iPhone** khi "Thêm vào màn hình chính", **icon ứng dụng** (`/manifest.webmanifest`): `src/app/icon.tsx`, `src/app/apple-icon.tsx`, `src/app/manifest.ts`.
+- **Ảnh chia sẻ** Facebook / Zalo / Messenger (1200×630): tên + câu giới thiệu + ảnh hero trong khung vòm. Mỗi album có ảnh riêng với ảnh bìa album. Xem `src/app/(public)/opengraph-image.tsx`.
+- **Tiêu đề trang**: trang chủ "Tên · Makeup cô dâu & sự kiện tại <địa chỉ>", album "Album makeup Cô dâu · Tên".
+- Font vẽ ảnh: Cormorant Garamond (giấy phép OFL) trong `src/assets/fonts/`, đã cắt gọn còn chữ Latin + tiếng Việt.
+
+Facebook lưu cache ảnh chia sẻ. Sau khi đổi tên/ảnh hero, dán link vào https://developers.facebook.com/tools/debug/ và bấm **Scrape Again** để cập nhật.
+
 ## Cấu trúc dự án
 
 ```

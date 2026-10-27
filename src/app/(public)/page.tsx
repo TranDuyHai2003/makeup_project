@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { brandName } from "@/lib/brand";
 import { About } from "@/components/sections/About";
 import { BeforeAfter } from "@/components/sections/BeforeAfter";
 import { Contact } from "@/components/sections/Contact";
@@ -10,13 +11,19 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { getSiteData } from "@/lib/data";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { settings } = await getSiteData();
-  const title = `${settings.artist_name ?? "Makeup Artist"} · Makeup Artist`;
-  const description = settings.tagline ?? "Portfolio makeup artist chuyên nghiệp.";
+  const { settings, categories } = await getSiteData();
+  const name = brandName(settings.artist_name);
+  const area = settings.address ? ` tại ${settings.address}` : "";
+  // Tiêu đề trang chủ: tên + dịch vụ chính + khu vực (từ khoá khách hay tìm), không lặp lại template
+  const title = `${name} · Makeup cô dâu & sự kiện${area}`;
+  const services = categories.map((c) => c.name.toLowerCase()).join(", ");
+  const tagline = settings.tagline?.trim().replace(/([^.!?…])$/, "$1.");
+  const description = [tagline, services && `Nhận makeup ${services}${area}.`].filter(Boolean).join(" ");
   return {
-    title,
+    title: { absolute: title },
     description,
-    openGraph: { title, description, type: "website", images: settings.hero_url ? [{ url: settings.hero_url }] : undefined },
+    alternates: { canonical: "/" },
+    openGraph: { title, description, url: "/" },
     twitter: { card: "summary_large_image", title, description },
   };
 }

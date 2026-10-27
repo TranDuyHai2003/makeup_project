@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -64,8 +65,8 @@ export function Header({ name }: { name: string }) {
       )}
     >
       <div className={cn("mx-auto flex max-w-6xl items-center justify-between px-5 transition-[padding] duration-500 md:px-8", scrolled ? "py-3" : "py-4 md:py-5")}>
-        <Link href="/" onClick={() => setOpen(false)} className="font-display relative z-10 truncate pr-4 text-[1.4rem] tracking-wide md:text-2xl">
-          {name}
+        <Link href="/" onClick={() => setOpen(false)} aria-label={`${name} - Trang chủ`} className="relative z-10 min-w-0 pr-4">
+          <Logo name={name} />
         </Link>
         <nav className="hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Menu chính">
           {links.map((l) => (
