@@ -1,4 +1,4 @@
-import { brandName, monogram } from "@/lib/brand";
+import { brandName } from "@/lib/brand";
 import { shareCard } from "@/lib/brand-images";
 import { getSiteData } from "@/lib/data";
 
@@ -12,7 +12,6 @@ export default async function OpenGraphImage() {
   const name = brandName(settings.artist_name);
   const tags = categories.slice(0, 4).map((c) => c.name).join(" · ");
   return shareCard({
-    initials: monogram(name),
     eyebrow: "Makeup Artist",
     title: name,
     subtitle: settings.tagline,

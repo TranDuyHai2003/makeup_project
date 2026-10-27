@@ -1,4 +1,4 @@
-import { brandName, monogram } from "@/lib/brand";
+import { brandName } from "@/lib/brand";
 import { shareCard } from "@/lib/brand-images";
 import { getCategoryBySlug } from "@/lib/data";
 
@@ -13,7 +13,6 @@ export default async function AlbumImage({ params }: { params: Promise<{ categor
   const name = brandName(data.settings.artist_name);
   const cover = data.photos.find((p) => p.is_featured) ?? data.photos[0];
   return shareCard({
-    initials: monogram(name),
     eyebrow: `Album · ${data.photos.length} ảnh`,
     title: data.category ? `Makeup ${data.category.name}` : name,
     subtitle: name,
