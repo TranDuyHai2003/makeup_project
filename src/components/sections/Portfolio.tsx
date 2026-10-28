@@ -7,6 +7,9 @@ import { ArrowUpRight, Expand } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SmartImage } from "@/components/ui/SmartImage";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
+import { localePath, type Locale } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
 import type { Category, Photo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -14,9 +17,9 @@ const PortfolioLightbox = dynamic(() => import("./PortfolioLightbox"), { ssr: fa
 
 const PAGE = 12;
 
-type Props = { photos: Photo[]; categories: Category[]; showHeading?: boolean; showFilter?: boolean; title?: string; eyebrow?: string; description?: string };
+type Props = { photos: Photo[]; categories: Category[]; lang: Locale; t: Dictionary["portfolio"]; showHeading?: boolean; showFilter?: boolean; title?: string; eyebrow?: string; description?: string };
 
-export function Portfolio({ photos, categories, showHeading = true, showFilter = true, title = "Những khoảnh khắc đã qua tay mình", eyebrow = "Portfolio", description }: Props) {
+export function Portfolio({ photos, categories, lang, t, showHeading = true, showFilter = true, title = t.title, eyebrow = t.eyebrow, description }: Props) {
   const [active, setActive] = useState<string | "all">("all");
   const [index, setIndex] = useState(-1);
   const [opened, setOpened] = useState(false); // chỉ tải lightbox sau lần bấm đầu tiên
@@ -49,7 +52,7 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
       {showFilter && usedCategories.length > 1 && (
         <div className="no-scrollbar mt-10 overflow-x-auto md:mt-14">
           <div className="mx-auto flex w-max gap-2 px-5 md:px-0">
-            <FilterChip active={active === "all"} onClick={() => choose("all")}>Tất cả</FilterChip>
+            <FilterChip active={active === "all"} onClick={() => choose("all")}>{t.all}</FilterChip>
             {usedCategories.map((c) => (
               <FilterChip key={c.id} active={active === c.id} onClick={() => choose(c.id)}>{c.name}</FilterChip>
             ))}
@@ -68,7 +71,7 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
               exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => open(i)}
-              aria-label={`Xem ảnh ${p.caption ?? i + 1}`}
+              aria-label={fmt(t.viewPhoto, { name: p.caption ?? i + 1 })}
               className="group relative block w-full cursor-zoom-in overflow-hidden text-left"
             >
               <SmartImage
@@ -101,7 +104,7 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
             onClick={() => setLimit((l) => l + PAGE)}
             className="rounded-full border border-line px-7 py-3 text-[0.68rem] uppercase tracking-[0.25em] text-muted transition-colors hover:border-gold hover:text-gold"
           >
-            Xem thêm {Math.min(PAGE, filtered.length - limit)} ảnh
+            {fmt(t.loadMore, { n: Math.min(PAGE, filtered.length - limit) })}
           </button>
         </div>
       )}
@@ -110,8 +113,8 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
         <div className="mt-20 px-5 md:mt-28 md:px-0">
           <Reveal className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Album</p>
-              <h3 className="font-display mt-3 text-3xl font-light md:text-4xl">Xem theo chủ đề</h3>
+              <p className="eyebrow">{t.albumEyebrow}</p>
+              <h3 className="font-display mt-3 text-3xl font-light md:text-4xl">{t.albumsTitle}</h3>
             </div>
           </Reveal>
           <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-5">
@@ -120,13 +123,13 @@ export function Portfolio({ photos, categories, showHeading = true, showFilter =
               const cover = inCat.find((p) => p.is_featured) ?? inCat[0];
               return (
                 <Reveal key={c.id} delay={i * 0.06}>
-                  <Link href={`/portfolio/${c.slug}`} className="group relative block aspect-[3/4] overflow-hidden">
+                  <Link href={localePath(lang, `/portfolio/${c.slug}`)} className="group relative block aspect-[3/4] overflow-hidden">
                     <SmartImage src={cover.url} alt={c.name} fill sizes="(min-width: 768px) 25vw, 50vw" maxWidth={640} imgClassName="duration-[1.2s] group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent transition-colors duration-500 group-hover:from-black/55" />
                     <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 md:p-5">
                       <div>
                         <p className="font-display text-xl font-light leading-tight text-white md:text-2xl">{c.name}</p>
-                        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.25em] text-white/75">{inCat.length} ảnh</p>
+                        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.25em] text-white/75">{fmt(t.photoCount, { n: inCat.length })}</p>
                       </div>
                       <ArrowUpRight size={18} className="text-gold-soft transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
                     </div>

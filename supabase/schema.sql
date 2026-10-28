@@ -36,6 +36,13 @@ create table if not exists testimonials (
   created_at timestamptz default now()
 );
 
+-- Đa ngôn ngữ: bản dịch tiếng Anh / tiếng Trung (xem supabase/migrations/002_i18n.sql)
+alter table settings     add column if not exists i18n jsonb not null default '{}'::jsonb;
+alter table categories   add column if not exists i18n jsonb not null default '{}'::jsonb;
+alter table photos       add column if not exists i18n jsonb not null default '{}'::jsonb;
+alter table services     add column if not exists i18n jsonb not null default '{}'::jsonb;
+alter table testimonials add column if not exists i18n jsonb not null default '{}'::jsonb;
+
 -- Dòng settings mặc định
 insert into settings (id, artist_name, tagline) values (1, 'Makeup Artist', 'Tôn vinh vẻ đẹp riêng của bạn')
 on conflict (id) do nothing;

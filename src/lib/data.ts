@@ -40,10 +40,3 @@ export async function getSiteData(): Promise<SiteData> {
     testimonials: (testimonials.data as Testimonial[] | null) ?? [],
   };
 }
-
-export async function getCategoryBySlug(slug: string) {
-  const data = await getSiteData();
-  const category = data.categories.find((c) => c.slug === slug) ?? null;
-  const photos = category ? data.photos.filter((p) => p.category_id === category.id) : [];
-  return { ...data, category, photos };
-}

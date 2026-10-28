@@ -2,17 +2,18 @@ import Link from "next/link";
 import { Camera, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Year } from "@/components/ui/Year";
+import { localePath, type Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
 import type { Settings } from "@/lib/types";
 import { messengerLink, telLink, zaloLink } from "@/lib/utils";
 
-const nav = [
-  { href: "/#about", label: "Giới thiệu" },
-  { href: "/#services", label: "Dịch vụ" },
-  { href: "/#portfolio", label: "Portfolio" },
-  { href: "/#contact", label: "Liên hệ" },
-];
-
-export function Footer({ settings }: { settings: Settings }) {
+export function Footer({ settings, lang, t }: { settings: Settings; lang: Locale; t: Dictionary }) {
+  const nav = [
+    { href: localePath(lang, "/#about"), label: t.nav.about },
+    { href: localePath(lang, "/#services"), label: t.nav.services },
+    { href: localePath(lang, "/#portfolio"), label: t.nav.portfolio },
+    { href: localePath(lang, "/#contact"), label: t.nav.contact },
+  ];
   type Social = { href: string | null; label: string; icon: React.ReactNode };
   const socials = ([
     { href: messengerLink(settings.facebook), label: "Messenger", icon: <MessageCircle size={16} strokeWidth={1.5} /> },
@@ -27,7 +28,7 @@ export function Footer({ settings }: { settings: Settings }) {
       <div className="mx-auto max-w-6xl px-5 pt-16 pb-10 md:px-8 md:pt-20">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" aria-label="Trang chủ"><Logo name={settings.artist_name ?? "Makeup Artist"} size="lg" /></Link>
+            <Link href={localePath(lang, "/")} aria-label={t.nav.home}><Logo name={settings.artist_name ?? "Makeup Artist"} size="lg" /></Link>
             {settings.tagline && <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{settings.tagline}</p>}
             {socials.length > 0 && (
               <div className="mt-6 flex gap-2.5">
@@ -47,7 +48,7 @@ export function Footer({ settings }: { settings: Settings }) {
             )}
           </div>
           <div>
-            <p className="eyebrow">Khám phá</p>
+            <p className="eyebrow">{t.footer.explore}</p>
             <ul className="mt-5 space-y-3 text-sm text-muted">
               {nav.map((l) => (
                 <li key={l.href}><Link href={l.href} className="transition-colors hover:text-gold">{l.label}</Link></li>
@@ -55,7 +56,7 @@ export function Footer({ settings }: { settings: Settings }) {
             </ul>
           </div>
           <div>
-            <p className="eyebrow">Liên hệ</p>
+            <p className="eyebrow">{t.footer.contact}</p>
             <ul className="mt-5 space-y-3 text-sm text-muted">
               {settings.phone && (
                 <li><a href={tel ?? "#"} className="flex items-center gap-3 transition-colors hover:text-gold"><Phone size={14} className="shrink-0 text-gold" />{settings.phone}</a></li>
@@ -68,7 +69,7 @@ export function Footer({ settings }: { settings: Settings }) {
         </div>
         <div className="mt-14 flex flex-col-reverse items-center justify-between gap-4 border-t border-line pt-6 text-[0.65rem] uppercase tracking-[0.2em] text-muted/70 sm:flex-row">
           <span>© <Year /> {settings.artist_name}</span>
-          <Link href="/admin" className="transition-colors hover:text-gold">Quản trị</Link>
+          <Link href="/admin" className="transition-colors hover:text-gold">{t.footer.admin}</Link>
         </div>
       </div>
     </footer>

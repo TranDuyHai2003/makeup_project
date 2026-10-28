@@ -1,11 +1,12 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { SmartImage } from "@/components/ui/SmartImage";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
 import type { Settings } from "@/lib/types";
 
-export function About({ settings }: { settings: Settings }) {
+export function About({ settings, t }: { settings: Settings; t: Dictionary["about"] }) {
   const stats = [
-    settings.years_exp ? { value: `${settings.years_exp}+`, label: "Năm kinh nghiệm" } : null,
-    settings.clients_count ? { value: `${settings.clients_count}+`, label: "Khách hàng" } : null,
+    settings.years_exp ? { value: `${settings.years_exp}+`, label: t.years } : null,
+    settings.clients_count ? { value: `${settings.clients_count}+`, label: t.clients } : null,
   ].filter(Boolean) as { value: string; label: string }[];
 
   return (
@@ -22,9 +23,9 @@ export function About({ settings }: { settings: Settings }) {
         </div>
       </Reveal>
       <Reveal delay={0.1}>
-        <p className="eyebrow">Giới thiệu</p>
+        <p className="eyebrow">{t.eyebrow}</p>
         <h2 className="font-display text-balance mt-4 text-[2.4rem] font-light leading-[1.1] md:text-5xl">
-          Xin chào, mình là <em className="text-gold">{settings.artist_name}</em>
+          {t.hello} <em className="text-gold">{settings.artist_name}</em>
         </h2>
         <div className="gold-line mt-6 w-24" />
         {settings.bio && <p className="mt-6 whitespace-pre-line text-[0.95rem] leading-[1.8] text-muted md:text-base">{settings.bio}</p>}

@@ -6,6 +6,8 @@ import { z } from "zod";
 import { destroyImage } from "@/lib/cloudinary-server";
 import { SITE_TAG } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { TRANSLATED_LOCALES } from "@/lib/i18n/config";
+import { TRANSLATABLE, type Translations } from "@/lib/i18n/content";
 import { slugify } from "@/lib/utils";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -21,7 +23,10 @@ async function requireUser() {
 }
 
 function fail(err: unknown): ActionResult {
-  const message = err instanceof Error ? err.message : String(err);
+  let message = err instanceof Error ? err.message : String(err);
+  if (/column .*i18n.* does not exist|i18n.*schema cache/i.test(message)) {
+    message = "Database chưa có cột bản dịch. Hãy chạy file supabase/migrations/002_i18n.sql trong Supabase → SQL Editor.";
+  }
   console.error("[admin action]", message);
   return { ok: false, error: message };
 }
@@ -29,6 +34,20 @@ function fail(err: unknown): ActionResult {
 /** Làm mới cache trang public ngay lập tức (đọc thấy ngay dữ liệu vừa ghi). */
 function refresh() {
   updateTag(SITE_TAG);
+}
+
+/** Đọc các ô bản dịch "i18n.<lang>.<field>" từ form thành { en: {...}, "zh-TW": {...} } (bỏ ô trống). */
+function readI18n(formData: FormData, fields: readonly string[]): Translations {
+  const out: Translations = {};
+  for (const lang of TRANSLATED_LOCALES) {
+    const entry: Record<string, string> = {};
+    for (const f of fields) {
+      const v = String(formData.get(`i18n.${lang}.${f}`) ?? "").trim();
+      if (v) entry[f] = v.slice(0, 5000);
+    }
+    if (Object.keys(entry).length) out[lang] = entry;
+  }
+  return out;
 }
 
 const emptyToNull = (v: unknown) => (v === "" || v === undefined ? null : v);
@@ -53,7 +72,8 @@ export async function saveSettings(_prev: ActionResult | null, formData: FormDat
   try {
     const supabase = await requireUser();
     const data = settingsSchema.parse(Object.fromEntries(formData.entries()));
-    const { error } = await supabase.from("settings").upsert({ id: 1, ...data });
+    const i18n = readI18n(formData, TRANSLATABLE.settings);
+    const { error } = await supabase.from("settings").upsert({ id: 1, ...data, i18n });
     if (error) throw new Error(error.message);
     refresh();
     return { ok: true };
@@ -70,7 +90,25 @@ export async function createCategory(_prev: ActionResult | null, formData: FormD
     const slugInput = String(formData.get("slug") ?? "").trim();
     const slug = slugify(slugInput || name);
     const { count } = await supabase.from("categories").select("id", { count: "exact", head: true });
-    const { error } = await supabase.from("categories").insert({ name, slug, sort_order: (count ?? 0) + 1 });
+    const i18n = readI18n(formData, TRANSLATABLE.categories);
+    const { error } = await supabase.from("categories").insert({ name, slug, sort_order: (count ?? 0) + 1, i18n });
+    if (error) throw new Error(error.message);
+    refresh();
+    return { ok: true };
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+/** Sửa tên (kèm bản dịch) và slug của danh mục từ form. */
+export async function saveCategory(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = await requireUser();
+    const id = z.string().uuid().parse(formData.get("id"));
+    const name = z.string().trim().min(1, "Thiếu tên danh mục").parse(formData.get("name"));
+    const slug = slugify(String(formData.get("slug") ?? "").trim() || name);
+    const i18n = readI18n(formData, TRANSLATABLE.categories);
+    const { error } = await supabase.from("categories").update({ name, slug, i18n }).eq("id", id);
     if (error) throw new Error(error.message);
     refresh();
     return { ok: true };
@@ -134,6 +172,7 @@ const photoPatchSchema = z.object({
   category_id: z.preprocess(emptyToNull, z.string().uuid().nullable()).optional(),
   is_featured: z.boolean().optional(),
   before_url: z.preprocess(emptyToNull, z.string().url().nullable()).optional(),
+  i18n: z.record(z.string(), z.record(z.string(), z.string())).optional(),
 });
 
 export async function updatePhoto(id: string, patch: z.infer<typeof photoPatchSchema>): Promise<ActionResult> {
@@ -205,7 +244,7 @@ export async function saveService(_prev: ActionResult | null, formData: FormData
     const supabase = await requireUser();
     const id = String(formData.get("id") ?? "");
     const data = serviceSchema.parse(Object.fromEntries(formData.entries()));
-    const payload = { ...data, sort_order: data.sort_order ?? 0 };
+    const payload = { ...data, sort_order: data.sort_order ?? 0, i18n: readI18n(formData, TRANSLATABLE.services) };
     const { error } = id
       ? await supabase.from("services").update(payload).eq("id", id)
       : await supabase.from("services").insert(payload);
@@ -239,7 +278,7 @@ export async function saveTestimonial(_prev: ActionResult | null, formData: Form
   try {
     const supabase = await requireUser();
     const id = String(formData.get("id") ?? "");
-    const data = testimonialSchema.parse(Object.fromEntries(formData.entries()));
+    const data = { ...testimonialSchema.parse(Object.fromEntries(formData.entries())), i18n: readI18n(formData, TRANSLATABLE.testimonials) };
     const { error } = id
       ? await supabase.from("testimonials").update(data).eq("id", id)
       : await supabase.from("testimonials").insert(data);

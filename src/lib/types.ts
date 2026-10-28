@@ -1,4 +1,8 @@
+import type { Translations } from "./i18n/content";
+
 export type Settings = {
+  /** Bản dịch (xem lib/i18n/content.ts). */
+  i18n?: Translations | null;
   id: number;
   artist_name: string | null;
   tagline: string | null;
@@ -16,6 +20,8 @@ export type Settings = {
 };
 
 export type Category = {
+  /** Bản dịch (xem lib/i18n/content.ts). */
+  i18n?: Translations | null;
   id: string;
   name: string;
   slug: string;
@@ -23,6 +29,8 @@ export type Category = {
 };
 
 export type Photo = {
+  /** Bản dịch (xem lib/i18n/content.ts). */
+  i18n?: Translations | null;
   id: string;
   url: string;
   public_id: string;
@@ -37,6 +45,8 @@ export type Photo = {
 };
 
 export type Service = {
+  /** Bản dịch (xem lib/i18n/content.ts). */
+  i18n?: Translations | null;
   id: string;
   title: string | null;
   description: string | null;
@@ -45,6 +55,8 @@ export type Service = {
 };
 
 export type Testimonial = {
+  /** Bản dịch (xem lib/i18n/content.ts). */
+  i18n?: Translations | null;
   id: string;
   client_name: string | null;
   content: string | null;

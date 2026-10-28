@@ -22,8 +22,8 @@
   --color-muted: var(--muted);
   --color-gold: var(--gold);
   --color-gold-hover: var(--gold-hover);
-  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-body: var(--font-be-vietnam), "Be Vietnam Pro", system-ui, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
+  --font-body: var(--font-be-vietnam), "Be Vietnam Pro", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
 }
 
 html {
@@ -76,6 +76,13 @@ body::before {
 /* Chừa vùng an toàn trên iPhone có tai thỏ / thanh home */
 .pb-safe {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Chữ Hán không có kiểu nghiêng: trình duyệt sẽ làm xiên giả trông méo, nên tắt nghiêng ở trang tiếng Trung */
+[lang^="zh"] .italic,
+[lang^="zh"] em,
+[lang^="zh"] i {
+  font-style: normal;
 }
 
 .text-balance {

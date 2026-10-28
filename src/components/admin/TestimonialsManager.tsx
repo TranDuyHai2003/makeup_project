@@ -6,7 +6,7 @@ import { deleteTestimonial, saveTestimonial } from "@/app/admin/actions";
 import { Button } from "@/components/ui/Button";
 import type { Testimonial } from "@/lib/types";
 import { ImageField } from "./ImageField";
-import { Card, Field, Label, ResultMessage, SubmitButton } from "./ui";
+import { Card, Field, Label, ResultMessage, SubmitButton, TranslationFields } from "./ui";
 
 export function TestimonialsManager({ testimonials }: { testimonials: Testimonial[] }) {
   const router = useRouter();
@@ -65,6 +65,7 @@ function TestimonialForm({ item, onDone, onCancel }: { item: Testimonial | null;
           </div>
         </div>
         <Field label="Nội dung" name="content" defaultValue={item?.content} textarea rows={3} />
+        <TranslationFields values={item?.i18n} fields={[{ name: "content", label: "Nội dung", textarea: true }]} />
         <ImageField label="Ảnh khách (tuỳ chọn)" name="photo_url" defaultValue={item?.photo_url} />
         <div className="flex items-center gap-3">
           <SubmitButton />

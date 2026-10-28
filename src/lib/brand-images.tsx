@@ -32,6 +32,34 @@ export function markImage(px: number, opts: { rounded?: boolean } = {}) {
   );
 }
 
+const CJK = /[\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F]/;
+
+/**
+ * Font chữ Hán phồn thể cho ảnh chia sẻ tiếng Trung: tải từ Google Fonts đúng những chữ cần dùng (tham số text=),
+ * nên chỉ vài KB. Lỗi mạng → bỏ qua (trình vẽ ảnh tự dùng font dự phòng).
+ */
+async function loadCjkFonts(text: string) {
+  const chars = [...new Set([...text].filter((c) => CJK.test(c)))].join("");
+  if (!chars) return [];
+  const load = async (family: string, weight: 300 | 500) => {
+    try {
+      const css = await fetch(`https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(chars)}`, {
+        // User-agent cũ để Google trả về TTF/WOFF (trình vẽ ảnh không đọc được WOFF2)
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Safari/534.30" },
+        signal: AbortSignal.timeout(6000),
+      }).then((r) => r.text());
+      const url = css.match(/src: url\((.+?)\) format\('(?:truetype|opentype|woff)'\)/)?.[1];
+      if (!url) return null;
+      const data = await fetch(url, { signal: AbortSignal.timeout(6000) }).then((r) => r.arrayBuffer());
+      return { name: "NotoSerifTC", data, weight, style: "normal" as const };
+    } catch {
+      return null;
+    }
+  };
+  const fonts = await Promise.all([load("Noto+Serif+TC", 300), load("Noto+Serif+TC", 500)]);
+  return fonts.filter((f): f is NonNullable<typeof f> => !!f);
+}
+
 type CardInput = {
   eyebrow: string;
   title: string;
@@ -48,7 +76,11 @@ export async function shareCard(input: CardInput) {
   const title = input.title.normalize("NFC");
   const subtitle = nfc(input.subtitle);
   const footer = nfc(input.footer);
-  const img = await toDataUri(input.imageUrl, 800);
+  const [img, cjkFonts] = await Promise.all([
+    toDataUri(input.imageUrl, 800),
+    loadCjkFonts([eyebrow, title, subtitle, footer].filter(Boolean).join(" ")),
+  ]);
+  const hasCjk = cjkFonts.length > 0;
   const len = title.length;
   const titleSize = img ? (len > 22 ? 62 : len > 14 ? 78 : 100) : len > 22 ? 84 : 110;
 
@@ -61,7 +93,8 @@ export async function shareCard(input: CardInput) {
           display: "flex",
           background: BRAND.bg,
           backgroundImage: `radial-gradient(circle at 92% 8%, ${BRAND.roseSoft} 0%, rgba(243,217,210,0) 45%), radial-gradient(circle at 0% 100%, ${BRAND.bg2} 0%, rgba(247,233,229,0) 50%)`,
-          fontFamily: "Cormorant",
+          // Chữ Latin dùng Cormorant, chữ Hán rơi xuống Noto Serif TC
+          fontFamily: hasCjk ? "Cormorant, NotoSerifTC" : "Cormorant",
           color: BRAND.ink,
           padding: "64px 72px",
         }}
@@ -113,6 +146,6 @@ export async function shareCard(input: CardInput) {
         ) : null}
       </div>
     ),
-    { width: 1200, height: 630, fonts: ogFonts },
+    { width: 1200, height: 630, fonts: [...ogFonts, ...cjkFonts] },
   );
 }

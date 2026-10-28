@@ -135,11 +135,17 @@ function EditDialog({ photo, categories, onClose, onSaved }: { photo: Photo; cat
       caption: String(fd.get("caption") ?? ""),
       category_id: String(fd.get("category_id") ?? ""),
       before_url: String(fd.get("before_url") ?? ""),
+      i18n: Object.fromEntries(
+        (["en", "zh-TW"] as const)
+          .map((l) => [l, String(fd.get(`i18n.${l}.caption`) ?? "").trim()] as const)
+          .filter(([, v]) => v)
+          .map(([l, v]) => [l, { caption: v }]),
+      ),
     };
     start(async () => {
       const res = await updatePhoto(photo.id, patch);
       if (!res.ok) return setError(res.error);
-      onSaved({ caption: patch.caption || null, category_id: patch.category_id || null, before_url: patch.before_url || null });
+      onSaved({ caption: patch.caption || null, category_id: patch.category_id || null, before_url: patch.before_url || null, i18n: patch.i18n });
     });
   }
 
@@ -154,6 +160,10 @@ function EditDialog({ photo, categories, onClose, onSaved }: { photo: Photo; cat
         <div>
           <label className="mb-1.5 block text-[0.65rem] uppercase tracking-[0.25em] text-muted">Chú thích</label>
           <input name="caption" defaultValue={photo.caption ?? ""} className="input" placeholder="VD: Cô dâu Thanh Hà" />
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <input name="i18n.en.caption" defaultValue={photo.i18n?.en?.caption ?? ""} className="input" placeholder="English" lang="en" />
+            <input name="i18n.zh-TW.caption" defaultValue={photo.i18n?.["zh-TW"]?.caption ?? ""} className="input" placeholder="繁體中文" lang="zh-Hant-TW" />
+          </div>
         </div>
         <div>
           <label className="mb-1.5 block text-[0.65rem] uppercase tracking-[0.25em] text-muted">Danh mục</label>

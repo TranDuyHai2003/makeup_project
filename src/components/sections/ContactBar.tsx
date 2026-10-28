@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Camera, MessageCircle, Phone } from "lucide-react";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
 import type { Settings } from "@/lib/types";
 import { cn, messengerLink, telLink, zaloLink } from "@/lib/utils";
 
@@ -8,7 +9,7 @@ import { cn, messengerLink, telLink, zaloLink } from "@/lib/utils";
  * Mobile: thanh liên hệ cố định dưới đáy (Zalo · Messenger · Gọi), hiện sau khi cuộn qua hero.
  * PC: nút Zalo tròn nổi ở góc phải.
  */
-export function ContactBar({ settings }: { settings: Settings }) {
+export function ContactBar({ settings, t }: { settings: Settings; t: Dictionary["contactBar"] }) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
     zalo && { href: zalo, label: "Zalo", icon: null, primary: true },
     messenger && { href: messenger, label: "Messenger", icon: <MessageCircle size={18} strokeWidth={1.6} /> },
     !messenger && settings.instagram && { href: settings.instagram, label: "Instagram", icon: <Camera size={18} strokeWidth={1.6} /> },
-    tel && { href: tel, label: "Gọi", icon: <Phone size={17} strokeWidth={1.6} />, internal: true },
+    tel && { href: tel, label: t.call, icon: <Phone size={17} strokeWidth={1.6} />, internal: true },
   ].filter(Boolean) as { href: string; label: string; icon: React.ReactNode; primary?: boolean; internal?: boolean }[];
 
   if (items.length === 0) return null;
@@ -41,7 +42,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
   return (
     <>
       <nav
-        aria-label="Liên hệ nhanh"
+        aria-label={t.label}
         className={cn(
           "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/90 px-3 shadow-[0_-10px_30px_-20px_rgba(90,40,40,.3)] pt-2.5 pb-safe backdrop-blur-xl transition-transform duration-500 md:hidden",
           show ? "translate-y-0" : "translate-y-full",
@@ -59,7 +60,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
               )}
             >
               {it.primary ? (
-                <span className="text-[0.8rem] font-semibold normal-case tracking-wide">Nhắn Zalo</span>
+                <span className="text-[0.8rem] font-semibold normal-case tracking-wide">{t.zalo}</span>
               ) : (
                 <>
                   {it.icon}
@@ -76,7 +77,7 @@ export function ContactBar({ settings }: { settings: Settings }) {
           href={zalo}
           target="_blank"
           rel="noreferrer"
-          aria-label="Nhắn Zalo"
+          aria-label={t.zalo}
           className="fixed right-6 bottom-6 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-[#0068ff] text-white shadow-lg shadow-[#0068ff]/30 transition-transform hover:scale-105 md:flex"
         >
           <span className="text-[0.7rem] font-semibold tracking-wide">Zalo</span>

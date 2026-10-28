@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { SmartImage } from "@/components/ui/SmartImage";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
+import { localePath, type Locale } from "@/lib/i18n/config";
 import type { Settings } from "@/lib/types";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export function Hero({ settings }: { settings: Settings }) {
+export function Hero({ settings, lang, t }: { settings: Settings; lang: Locale; t: Dictionary["hero"] }) {
   const name = settings.artist_name ?? "";
   return (
     <section className="relative overflow-hidden">
@@ -41,7 +43,7 @@ export function Hero({ settings }: { settings: Settings }) {
               className="absolute -bottom-4 -left-4 flex h-24 w-24 flex-col items-center justify-center rounded-full border border-gold/40 bg-surface text-center shadow-[0_20px_40px_-20px_rgba(90,40,40,.4)] md:-left-10 md:h-28 md:w-28"
             >
               <span className="font-display text-3xl font-light leading-none text-gold md:text-4xl">{settings.years_exp}+</span>
-              <span className="mt-1 text-[0.5rem] uppercase leading-tight tracking-[0.2em] text-muted md:text-[0.55rem]">năm<br />kinh nghiệm</span>
+              <span className="mt-1 max-w-[4.5rem] text-[0.5rem] uppercase leading-tight tracking-[0.15em] text-muted md:text-[0.55rem]">{t.yearsBadge}</span>
             </motion.div>
           ) : null}
         </motion.div>
@@ -55,7 +57,7 @@ export function Hero({ settings }: { settings: Settings }) {
             className="eyebrow flex items-center justify-center gap-3 md:justify-start"
           >
             <span className="h-px w-8 bg-gold/60" aria-hidden />
-            Bridal · Event · Editorial
+            {t.eyebrow}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -81,21 +83,21 @@ export function Hero({ settings }: { settings: Settings }) {
             transition={{ duration: 0.8, delay: 0.75, ease }}
             className="mx-auto mt-9 grid max-w-sm grid-cols-2 gap-3 sm:flex sm:max-w-none sm:justify-center sm:gap-4 md:justify-start"
           >
-            <ButtonLink href="/#contact" className="min-h-12 whitespace-nowrap px-4 sm:px-7">Đặt lịch</ButtonLink>
-            <ButtonLink href="/#portfolio" variant="outline" className="min-h-12 whitespace-nowrap px-4 sm:px-7">Xem portfolio</ButtonLink>
+            <ButtonLink href={localePath(lang, "/#contact")} className="min-h-12 whitespace-nowrap px-4 sm:px-7">{t.book}</ButtonLink>
+            <ButtonLink href={localePath(lang, "/#portfolio")} variant="outline" className="min-h-12 whitespace-nowrap px-4 sm:px-7">{t.viewPortfolio}</ButtonLink>
           </motion.div>
         </div>
       </div>
 
       <motion.a
         href="#about"
-        aria-label="Cuộn xuống"
+        aria-label={t.scrollDown}
         className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-gold md:flex"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 8, 0] }}
         transition={{ opacity: { delay: 1.2 }, y: { repeat: Infinity, duration: 2.2, ease: "easeInOut" } }}
       >
-        <span className="text-[0.6rem] uppercase tracking-[0.35em]">Cuộn</span>
+        <span className="text-[0.6rem] uppercase tracking-[0.35em]">{t.scroll}</span>
         <ChevronDown size={18} />
       </motion.a>
     </section>

@@ -4,20 +4,21 @@ import { ChevronsLeftRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { cldSrcSet, cldUrl } from "@/lib/cloudinary";
+import type { Dictionary } from "@/lib/i18n/dictionaries/vi";
 import type { Photo } from "@/lib/types";
 
-export function BeforeAfter({ photos }: { photos: Photo[] }) {
+export function BeforeAfter({ photos, t }: { photos: Photo[]; t: Dictionary["beforeAfter"] }) {
   const pairs = photos.filter((p) => p.before_url);
   if (pairs.length === 0) return null;
 
   return (
     <section id="before-after" className="bg-bg-2 py-24 md:py-36">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeading eyebrow="Before / After" title="Sự khác biệt nằm ở chi tiết" description="Kéo thanh trượt để so sánh trước và sau khi trang điểm." />
+        <SectionHeading eyebrow={t.eyebrow} title={t.title} description={t.description} />
         <div className={pairs.length === 1 ? "mx-auto mt-14 max-w-xl md:mt-20" : "mt-14 grid gap-10 md:mt-20 md:grid-cols-2 md:gap-8"}>
           {pairs.slice(0, 4).map((p, i) => (
             <Reveal key={p.id} delay={i * 0.08}>
-              <CompareSlider before={p.before_url!} after={p.url} alt={p.caption ?? ""} ratio={pairs.length === 1 && p.width && p.height ? p.width / p.height : 4 / 5} />
+              <CompareSlider t={t} before={p.before_url!} after={p.url} alt={p.caption ?? ""} ratio={pairs.length === 1 && p.width && p.height ? p.width / p.height : 4 / 5} />
               {p.caption && <p className="font-display mt-4 text-center text-lg font-light text-ink/80">{p.caption}</p>}
             </Reveal>
           ))}
@@ -27,7 +28,7 @@ export function BeforeAfter({ photos }: { photos: Photo[] }) {
   );
 }
 
-export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: string; after: string; alt: string; ratio?: number }) {
+export function CompareSlider({ t, before, after, alt, ratio = 0.8 }: { t: Dictionary["beforeAfter"]; before: string; after: string; alt: string; ratio?: number }) {
   const [pos, setPos] = useState(50);
   const [touched, setTouched] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -56,12 +57,12 @@ export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: str
 
   return (
     <div ref={ref} className="relative select-none overflow-hidden bg-bg-2 shadow-[0_30px_60px_-30px_rgba(90,40,40,.35)]" style={{ aspectRatio: `${Math.max(ratio, 0.66)}` }}>
-      <img src={cldUrl(after, 1200)} srcSet={cldSrcSet(after, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - sau`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
+      <img src={cldUrl(after, 1200)} srcSet={cldSrcSet(after, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - ${t.after}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
       <div
         className={animate ? "absolute inset-0 transition-[clip-path] duration-500 ease-in-out" : "absolute inset-0"}
         style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
       >
-        <img src={cldUrl(before, 1200)} srcSet={cldSrcSet(before, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - trước`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
+        <img src={cldUrl(before, 1200)} srcSet={cldSrcSet(before, 1200)} sizes="(min-width: 768px) 560px, 100vw" alt={`${alt} - ${t.before}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
       </div>
       <div
         className={animate ? "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_14px_rgba(0,0,0,.35)] transition-[left] duration-500 ease-in-out" : "pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_14px_rgba(0,0,0,.35)]"}
@@ -71,8 +72,8 @@ export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: str
           <ChevronsLeftRight size={20} strokeWidth={1.5} />
         </div>
       </div>
-      <span className="pointer-events-none absolute top-3 left-3 rounded-full bg-white/80 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink backdrop-blur">Trước</span>
-      <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-gold px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-white">Sau</span>
+      <span className="pointer-events-none absolute top-3 left-3 rounded-full bg-white/80 px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-ink backdrop-blur">{t.before}</span>
+      <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-gold px-3 py-1 text-[0.6rem] uppercase tracking-[0.25em] text-white">{t.after}</span>
       <input
         type="range"
         min={0}
@@ -82,7 +83,7 @@ export function CompareSlider({ before, after, alt, ratio = 0.8 }: { before: str
           setTouched(true);
           setPos(Number(e.target.value));
         }}
-        aria-label="So sánh trước và sau"
+        aria-label={t.compare}
         className="ba-range absolute inset-0 m-0 opacity-0"
       />
     </div>

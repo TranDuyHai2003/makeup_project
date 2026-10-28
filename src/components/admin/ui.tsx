@@ -49,3 +49,49 @@ export function ResultMessage({ result }: { result: ActionResult | null }) {
   if (!result) return null;
   return result.ok ? <p className="text-sm text-gold">Đã lưu.</p> : <p className="text-sm text-red-600">{result.error}</p>;
 }
+
+type TrField = { name: string; label: string; textarea?: boolean; rows?: number; placeholder?: string };
+type TrValues = Partial<Record<"en" | "zh-TW", Record<string, string | null | undefined>>> | null | undefined;
+
+const TR_LANGS = [
+  { code: "en", label: "English" },
+  { code: "zh-TW", label: "繁體中文 (Đài Loan)" },
+] as const;
+
+/**
+ * Ô nhập bản dịch tiếng Anh / tiếng Trung cho các trường nội dung. Tên ô dạng "i18n.en.tagline".
+ * Để trống → trang tiếng Anh / tiếng Trung tự dùng bản tiếng Việt.
+ */
+export function TranslationFields({ fields, values, defaultOpen }: { fields: TrField[]; values: TrValues; defaultOpen?: boolean }) {
+  const filled = TR_LANGS.map((l) => fields.filter((f) => values?.[l.code]?.[f.name]?.trim()).length);
+  return (
+    <details open={defaultOpen} className="group rounded-xl border border-dashed border-line bg-bg/60 p-4 [&_summary::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm">
+        <span className="font-medium">🌐 Bản dịch (English · 繁體中文)</span>
+        <span className="text-xs text-muted">
+          EN {filled[0]}/{fields.length} · 中文 {filled[1]}/{fields.length}
+          <span className="ml-2 inline-block transition-transform group-open:rotate-180">▾</span>
+        </span>
+      </summary>
+      <p className="mt-2 text-xs text-muted">Ô nào để trống, trang ngôn ngữ đó sẽ hiện bản tiếng Việt.</p>
+      <div className="mt-4 grid gap-5 md:grid-cols-2">
+        {TR_LANGS.map((l) => (
+          <div key={l.code} className="space-y-3" lang={l.code === "zh-TW" ? "zh-Hant-TW" : "en"}>
+            <p className="text-[0.65rem] uppercase tracking-[0.25em] text-gold">{l.label}</p>
+            {fields.map((f) => (
+              <Field
+                key={f.name}
+                label={f.label}
+                name={`i18n.${l.code}.${f.name}`}
+                defaultValue={values?.[l.code]?.[f.name] ?? ""}
+                textarea={f.textarea}
+                rows={f.rows ?? 3}
+                placeholder={f.placeholder}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </details>
+  );
+}

@@ -3,7 +3,7 @@ import { useActionState } from "react";
 import { saveSettings } from "@/app/admin/actions";
 import type { Settings } from "@/lib/types";
 import { ImageField } from "./ImageField";
-import { Card, Field, ResultMessage, SubmitButton } from "./ui";
+import { Card, Field, ResultMessage, SubmitButton, TranslationFields } from "./ui";
 
 export function SettingsForm({ settings }: { settings: Settings }) {
   const [result, action] = useActionState(saveSettings, null);
@@ -36,6 +36,16 @@ export function SettingsForm({ settings }: { settings: Settings }) {
           <Field label="Instagram" name="instagram" defaultValue={settings.instagram} placeholder="https://instagram.com/..." />
           <Field label="TikTok" name="tiktok" defaultValue={settings.tiktok} placeholder="https://tiktok.com/@..." />
         </Card>
+      </div>
+      <div className="lg:col-span-2">
+        <TranslationFields
+          values={settings.i18n}
+          fields={[
+            { name: "tagline", label: "Slogan" },
+            { name: "bio", label: "Giới thiệu (bio)", textarea: true, rows: 6 },
+            { name: "address", label: "Địa chỉ", placeholder: "Hanoi, Vietnam" },
+          ]}
+        />
       </div>
       <div className="flex items-center gap-4 lg:col-span-2">
         <SubmitButton />

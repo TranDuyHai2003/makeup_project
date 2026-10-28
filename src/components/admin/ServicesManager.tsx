@@ -6,7 +6,7 @@ import { deleteService, saveService } from "@/app/admin/actions";
 import { Button } from "@/components/ui/Button";
 import type { Service } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
-import { Card, Field, ResultMessage, SubmitButton } from "./ui";
+import { Card, Field, ResultMessage, SubmitButton, TranslationFields } from "./ui";
 
 export function ServicesManager({ services }: { services: Service[] }) {
   const router = useRouter();
@@ -69,6 +69,13 @@ function ServiceForm({ service, onDone, onCancel }: { service: Service | null; o
           <Field label="Thứ tự" name="sort_order" type="number" defaultValue={service?.sort_order ?? 0} />
         </div>
         <Field label="Mô tả" name="description" defaultValue={service?.description} textarea rows={3} />
+        <TranslationFields
+          values={service?.i18n}
+          fields={[
+            { name: "title", label: "Tên dịch vụ" },
+            { name: "description", label: "Mô tả", textarea: true },
+          ]}
+        />
         <div className="flex items-center gap-3">
           <SubmitButton />
           <Button type="button" variant="ghost" onClick={onCancel} className="px-4 py-2">Huỷ</Button>

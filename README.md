@@ -55,6 +55,20 @@ Supabase free tạm dừng project sau 7 ngày không hoạt động. Workflow `
 - `SITE_URL` = `https://tenban.vercel.app`
 - `KEEP_ALIVE_SECRET` = chuỗi ngẫu nhiên bất kỳ, **giống** giá trị `KEEP_ALIVE_SECRET` đã đặt trên Vercel.
 
+## Đa ngôn ngữ (Tiếng Việt · English · 繁體中文)
+
+| Ngôn ngữ | Đường dẫn |
+|---|---|
+| Tiếng Việt (mặc định) | `/`, `/portfolio/co-dau` |
+| English | `/en`, `/en/portfolio/co-dau` |
+| 繁體中文 (Đài Loan) | `/zh-TW`, `/zh-TW/portfolio/co-dau` |
+
+- **Tự chọn ngôn ngữ**: lần đầu ghé, trình duyệt tiếng Anh / tiếng Trung được chuyển sang `/en` / `/zh-TW`. Khách bấm nút VI · EN · 中文 ở header thì lựa chọn được nhớ 1 năm. Robot Google/Facebook/Zalo luôn nhận đúng trang theo link. Xử lý trong `src/proxy.ts`.
+- **Chữ giao diện** (menu, nút, tiêu đề mục...): `src/lib/i18n/dictionaries/{vi,en,zh-TW}.ts`.
+- **Nội dung nhập trong admin** (slogan, bio, địa chỉ, tên album, dịch vụ, cảm nhận, chú thích ảnh): mỗi form có khối **🌐 Bản dịch** để nhập tiếng Anh / tiếng Trung. Ô để trống → trang đó hiện bản tiếng Việt. Lưu ở cột `i18n` (jsonb) của từng bảng.
+- **Cài lần đầu / database cũ**: chạy `supabase/migrations/002_i18n.sql` trong SQL Editor (thêm cột `i18n` + điền sẵn bản dịch dữ liệu mẫu), rồi vào Admin → Cài đặt bấm **Lưu** để xoá cache.
+- **SEO**: mỗi trang có `hreflang`, canonical, sitemap đủ 3 ngôn ngữ, ảnh chia sẻ theo ngôn ngữ (bản tiếng Trung tự tải font chữ Hán).
+
 ## Logo, favicon, tiêu đề
 
 - **Biểu tượng thương hiệu**: mắt khép với hàng mi cong, nét kẻ mắt đuôi mèo, chân mày và ánh lấp lánh, vẽ bằng nét thư pháp vàng hồng. Là vector trong `src/lib/logo-mark.ts`, dùng chung cho logo (header, footer), favicon, icon iPhone, icon ứng dụng và ảnh chia sẻ.
@@ -71,7 +85,7 @@ Facebook lưu cache ảnh chia sẻ. Sau khi đổi tên/ảnh hero, dán link v
 ```
 src/
 ├─ app/
-│  ├─ (public)/                 # Trang chủ one-page + /portfolio/[category]
+│  ├─ [lang]/                   # Trang chủ + /portfolio/[category] cho vi / en / zh-TW
 │  ├─ admin/
 │  │  ├─ login/                 # Đăng nhập (Supabase Auth)
 │  │  ├─ (protected)/           # Dashboard, photos, categories, services, testimonials, settings
@@ -86,7 +100,7 @@ src/
 │  ├─ supabase/ (client, server, public)
 │  ├─ cloudinary.ts / cloudinary-server.ts
 │  └─ mock-data.ts
-└─ proxy.ts                     # Bảo vệ /admin (tên mới của middleware.ts trong Next.js 16)
+└─ proxy.ts                     # Chọn ngôn ngữ + bảo vệ /admin (tên mới của middleware.ts trong Next.js 16)
 supabase/schema.sql             # Tạo bảng + RLS
 .github/workflows/keep-alive.yml
 ```
